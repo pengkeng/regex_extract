@@ -1,5 +1,5 @@
 import bean.FileObj;
-import bean.RegexObj;
+import bean.regexps;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
@@ -58,11 +58,11 @@ public class RegexExtractor {
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
-                    String fileName = file.getAbsolutePath();
+                    String fileName = file.toString();
                     if (fileName.endsWith(".java")) {
                         try {
                             System.out.println("111->>>>" + fileName);
-                            LinkedList<RegexObj> regexs = getReFromFile(fileName);
+                            LinkedList<regexps> regexs = getReFromFile(fileName);
                             if (regexs != null && regexs.size() > 0) {
                                 resultList.add(new FileObj(regexs, fileName));
                             }
@@ -87,11 +87,11 @@ public class RegexExtractor {
      * @return
      * @throws FileNotFoundException
      */
-    private LinkedList<RegexObj> getReFromFile(String filePath) throws FileNotFoundException {
+    private LinkedList<regexps> getReFromFile(String filePath) throws FileNotFoundException {
         try {
             FileInputStream in = new FileInputStream(filePath);
             CompilationUnit cu = StaticJavaParser.parse(in);
-            LinkedList<RegexObj> regexs = new LinkedList<>();
+            LinkedList<regexps> regexs = new LinkedList<>();
             getNode(cu, new HashMap<>(), regexs);
             return regexs;
         } catch (Exception e) {
@@ -106,7 +106,7 @@ public class RegexExtractor {
      * @param list
      * @param regexs
      */
-    private void getNode(Node compilationUnit, HashMap<String, String> list, LinkedList<RegexObj> regexs) {
+    private void getNode(Node compilationUnit, HashMap<String, String> list, LinkedList<regexps> regexs) {
         List<Node> childNodes = compilationUnit.getChildNodes();
         if (compilationUnit instanceof VariableDeclarator && "String".equals(((VariableDeclarator) compilationUnit).getTypeAsString())) {
             String key = ((VariableDeclarator) compilationUnit).getName().toString();
@@ -166,7 +166,7 @@ public class RegexExtractor {
      * @param list
      * @param regexs
      */
-    private void regexProcess(Node compilationUnit, HashMap<String, String> list, LinkedList<RegexObj> regexs) {
+    private void regexProcess(Node compilationUnit, HashMap<String, String> list, LinkedList<regexps> regexs) {
         NodeList<Expression> arguments = ((MethodCallExpr) compilationUnit).getArguments();
         if (arguments.size() > 0) {
             Expression argument = arguments.get(0);
@@ -178,7 +178,7 @@ public class RegexExtractor {
                         line = argument.getRange().get().begin.line;
                     }
                     System.out.println(regex);
-                    regexs.add(new RegexObj(line, regex));
+                    regexs.add(new regexps(line, regex));
                 }
             }
             if (argument.isStringLiteralExpr()) {
@@ -189,7 +189,7 @@ public class RegexExtractor {
                         line = argument.getRange().get().begin.line;
                     }
                     System.out.println(regex);
-                    regexs.add(new RegexObj(line, regex));
+                    regexs.add(new regexps(line, regex));
                 }
             }
         }

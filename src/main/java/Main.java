@@ -16,7 +16,7 @@ public class Main {
         File[] files = new File(rootPath).listFiles();
         assert files != null;
         for (File file : files) {
-            file = new File(file.getAbsolutePath() + "\\java");
+            file = new File(file.getAbsolutePath() + "/java");
             if (file.isDirectory()) {
                 File[] projects = file.listFiles();
                 assert projects != null;
@@ -29,6 +29,11 @@ public class Main {
                             continue;
                         }
                         new RegexExtractor(project, output).extractToFile();
+//                        try {
+//                            FileUtils.forceDeleteOnExit(output);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
                     }
                 }
 
