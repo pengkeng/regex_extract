@@ -54,27 +54,42 @@ public class RegexExtractor {
      * @param resultList
      */
     private void listFile(File dir, LinkedList<FileObj> resultList) {
-        File[] files = dir.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile()) {
-                    String fileName = file.toString();
-                    if (fileName.endsWith(".java")) {
-                        try {
-                            System.out.println("111->>>>" + fileName);
-                            LinkedList<regexps> regexs = getReFromFile(fileName);
-                            if (regexs != null && regexs.size() > 0) {
-                                resultList.add(new FileObj(regexs, fileName));
+        if (dir.isFile()) {
+            String fileName = dir.toString();
+            if (fileName.endsWith(".java")) {
+                try {
+                    System.out.println("111->>>>" + fileName);
+                    LinkedList<regexps> regexs = getReFromFile(fileName);
+                    if (regexs != null && regexs.size() > 0) {
+                        resultList.add(new FileObj(regexs, fileName));
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        String fileName = file.toString();
+                        if (fileName.endsWith(".java")) {
+                            try {
+                                System.out.println("111->>>>" + fileName);
+                                LinkedList<regexps> regexs = getReFromFile(fileName);
+                                if (regexs != null && regexs.size() > 0) {
+                                    resultList.add(new FileObj(regexs, fileName));
+                                }
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
                             }
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
                         }
+                    } else if (file.isDirectory()) {
+                        if (file.toString().contains("test")) {
+                            return;
+                        }
+                        listFile(file, resultList);
                     }
-                } else if (file.isDirectory()) {
-                    if (file.toString().contains("test")) {
-                        return;
-                    }
-                    listFile(file, resultList);
                 }
             }
         }
@@ -170,28 +185,46 @@ public class RegexExtractor {
         NodeList<Expression> arguments = ((MethodCallExpr) compilationUnit).getArguments();
         if (arguments.size() > 0) {
             Expression argument = arguments.get(0);
-            if (argument.isNameExpr()) {
-                String regex = list.get(argument.toString());
-                if (regex != null && !regex.isEmpty() && regex.length() > 5) {
-                    int line = -1;
-                    if (argument.getRange().isPresent()) {
-                        line = argument.getRange().get().begin.line;
-                    }
-                    System.out.println(regex);
-                    regexs.add(new regexps(line, regex));
-                }
+            String regex = null;
+            if (argument.isBinaryExpr()) {
+                regex = getCombineRegex(argument, list);
+            } else if (argument.isNameExpr()) {
+                regex = list.get(argument.toString());
+            } else if (argument.isStringLiteralExpr()) {
+                regex = ((StringLiteralExpr) argument).asString();
             }
-            if (argument.isStringLiteralExpr()) {
-                String regex = ((StringLiteralExpr) argument).asString();
-                if (regex != null && !regex.isEmpty() && regex.length() > 5) {
-                    int line = -1;
-                    if (argument.getRange().isPresent()) {
-                        line = argument.getRange().get().begin.line;
-                    }
-                    System.out.println(regex);
-                    regexs.add(new regexps(line, regex));
+            if (regex != null && !regex.isEmpty() && regex.length() > 5) {
+                int line = -1;
+                if (argument.getRange().isPresent()) {
+                    line = argument.getRange().get().begin.line;
                 }
+                System.out.println(regex);
+                regexs.add(new regexps(line, regex));
             }
+        }
+    }
+
+    /**
+     * 获取组合regex的内容
+     * @param binaryExpr
+     * @param list
+     * @return
+     */
+    private String getCombineRegex(Expression binaryExpr, HashMap<String, String> list) {
+        if (binaryExpr.isBinaryExpr()) {
+            String left = getCombineRegex(binaryExpr.asBinaryExpr().getLeft(), list);
+            String right = getCombineRegex(binaryExpr.asBinaryExpr().getRight(), list);
+            if (BinaryExpr.Operator.PLUS == binaryExpr.asBinaryExpr().getOperator()) {
+                return left + right;
+            } else {
+                return "";
+            }
+        } else if (binaryExpr.isStringLiteralExpr()) {
+            return binaryExpr.asStringLiteralExpr().asString();
+        } else if (binaryExpr.isNameExpr()) {
+            return list.get(binaryExpr.toString());
+        } else {
+            return "";
         }
     }
 }
