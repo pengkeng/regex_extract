@@ -12,8 +12,8 @@
 
 ## Example Run
 ```java
-   File rootPath = new File("test.java");
-   File resultFile = new File("test.json");
+   File rootPath = new File("Test.java");
+   File resultFile = new File("Test.json");
    RegexExtractor extractor = new RegexExtractor(rootPath, resultFile);
    extractor.extractToFile();
 ```

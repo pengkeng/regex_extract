@@ -5,10 +5,10 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-//        String rootPath = "D:\\pqc\\extract-cve-company\\alibaba\\java\\alibaba_fastjson";
-//        String resultFile = "test.json";
-//        new RegexExtractor(rootPath, resultFile).extractToFile();
-        CVE_Company();
+        String rootPath = "/Users/pqc/idea/regex_extract/test";
+        String resultFile = "test.json";
+        new RegexExtractor(new File(rootPath), new File(resultFile)).extractToFile();
+//        CVE_Company();
     }
 
     public static void CVE_Company() {
