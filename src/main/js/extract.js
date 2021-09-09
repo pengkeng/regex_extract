@@ -10,11 +10,16 @@ var babylon = require("babylon");
 var traverse = require("babel-traverse");
 var fs = require("fs");
 
-const root = "/Users/pqc/idea/regex_extract/src/main/js/test";
-const filename = "test.json";
+const root = "/Users/pqc/Desktop/browserslist-main";
+const filename = "browserslist.json";
 var regexs = [];
 
 readDirSync(root);
+for (let i = 0; i < regexs.length; i++) {
+    for(let j = 0;j<regexs[i].regexps.length;j++){
+        console.log(regexs[i].regexps[j].pattern)
+    }
+}
 fs.writeFileSync(filename, JSON.stringify(regexs));
 
 /**
@@ -91,7 +96,8 @@ function getReList(sourceF) {
                     if (node.type === 'RegExpLiteral') {
                         regexpObj = {
                             pattern: node.pattern,
-                            flags: node.flags
+                            flags: node.flags,
+                            line: node.loc.start.line
                         };
                     } else if (node.type === 'NewExpression' &&
                         node.callee.type === 'Identifier' && node.callee.name === 'RegExp') {
@@ -106,7 +112,8 @@ function getReList(sourceF) {
 
                         regexpObj = {
                             pattern: pattern,
-                            flags: flags
+                            flags: flags,
+                            line: node.loc.start.line
                         };
                     }
                 } catch (e) {

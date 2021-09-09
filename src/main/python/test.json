@@ -1,0 +1,1 @@
+[{"filename": "test/test.py", "regexps": [{"pattern": "(.*) \\\\are (.*?) .*", "flags": "M|I"}]}]

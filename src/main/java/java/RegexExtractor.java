@@ -1,12 +1,14 @@
-import bean.FileObj;
-import bean.regexps;
+package java;
+
+import java.bean.FileObj;
+import java.bean.regexps;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.*;
-import utils.IOUtils;
+import java.utils.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,6 +1,5 @@
-package utils;
+package java.utils;
 
-import bean.FileObj;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 
@@ -9,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class IOUtils {
+
     /**
      * 将结果输出到文件
      *

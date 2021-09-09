@@ -1,0 +1,347 @@
+[
+  {
+    "filename": "/Users/pqc/Desktop/browserslist-main/cli.js",
+    "regexps": [
+      {
+        "pattern": "^[\"']|[\"']$",
+        "flags": "g",
+        "line": 51
+      },
+      {
+        "pattern": "^[\"']|[\"']$",
+        "flags": "g",
+        "line": 59
+      },
+      {
+        "pattern": ".",
+        "flags": "g",
+        "line": 127
+      }
+    ]
+  },
+  {
+    "filename": "/Users/pqc/Desktop/browserslist-main/index.js",
+    "regexps": [
+      {
+        "pattern": "^(?:[2-4]\\.|[34]$)",
+        "flags": "",
+        "line": 268
+      },
+      {
+        "pattern": "^(?:,\\s*|\\s+or\\s+)(.*)",
+        "flags": "i",
+        "line": 473
+      },
+      {
+        "pattern": "^\\s+and\\s+(.*)",
+        "flags": "i",
+        "line": 474
+      },
+      {
+        "pattern": " \\S+$",
+        "flags": "",
+        "line": 611
+      },
+      {
+        "pattern": "^last\\s+(\\d+)\\s+major\\s+versions?$",
+        "flags": "i",
+        "line": 619
+      },
+      {
+        "pattern": "^last\\s+(\\d+)\\s+versions?$",
+        "flags": "i",
+        "line": 634
+      },
+      {
+        "pattern": "^last\\s+(\\d+)\\s+electron\\s+major\\s+versions?$",
+        "flags": "i",
+        "line": 649
+      },
+      {
+        "pattern": "^last\\s+(\\d+)\\s+(\\w+)\\s+major\\s+versions?$",
+        "flags": "i",
+        "line": 658
+      },
+      {
+        "pattern": "^last\\s+(\\d+)\\s+electron\\s+versions?$",
+        "flags": "i",
+        "line": 670
+      },
+      {
+        "pattern": "^last\\s+(\\d+)\\s+(\\w+)\\s+versions?$",
+        "flags": "i",
+        "line": 678
+      },
+      {
+        "pattern": "^unreleased\\s+versions$",
+        "flags": "i",
+        "line": 689
+      },
+      {
+        "pattern": "^unreleased\\s+electron\\s+versions?$",
+        "flags": "i",
+        "line": 703
+      },
+      {
+        "pattern": "^unreleased\\s+(\\w+)\\s+versions?$",
+        "flags": "i",
+        "line": 709
+      },
+      {
+        "pattern": "^last\\s+(\\d*.?\\d+)\\s+years?$",
+        "flags": "i",
+        "line": 718
+      },
+      {
+        "pattern": "^since (\\d+)(?:-(\\d+))?(?:-(\\d+))?$",
+        "flags": "i",
+        "line": 724
+      },
+      {
+        "pattern": "^(>=?|<=?)\\s*(\\d*\\.?\\d+)%$",
+        "flags": "",
+        "line": 733
+      },
+      {
+        "pattern": "^(>=?|<=?)\\s*(\\d*\\.?\\d+)%\\s+in\\s+my\\s+stats$",
+        "flags": "",
+        "line": 758
+      },
+      {
+        "pattern": "^(>=?|<=?)\\s*(\\d*\\.?\\d+)%\\s+in\\s+(\\S+)\\s+stats$",
+        "flags": "",
+        "line": 786
+      },
+      {
+        "pattern": "^(>=?|<=?)\\s*(\\d*\\.?\\d+)%\\s+in\\s+((alt-)?\\w\\w)$",
+        "flags": "",
+        "line": 821
+      },
+      {
+        "pattern": "^cover\\s+(\\d*\\.?\\d+)%(\\s+in\\s+(my\\s+stats|(alt-)?\\w\\w))?$",
+        "flags": "",
+        "line": 852
+      },
+      {
+        "pattern": "^\\s+in\\s+my\\s+stats$",
+        "flags": "",
+        "line": 857
+      },
+      {
+        "pattern": "\\s+in\\s+((alt-)?\\w\\w)",
+        "flags": "",
+        "line": 865
+      },
+      {
+        "pattern": "^supports\\s+([\\w-]+)$",
+        "flags": "",
+        "line": 893
+      },
+      {
+        "pattern": "^electron\\s+([\\d.]+)\\s*-\\s*([\\d.]+)$",
+        "flags": "i",
+        "line": 907
+      },
+      {
+        "pattern": "^node\\s+([\\d.]+)\\s*-\\s*([\\d.]+)$",
+        "flags": "i",
+        "line": 928
+      },
+      {
+        "pattern": "^(0|[1-9]\\d*)(\\.(0|[1-9]\\d*)){0,2}$",
+        "flags": "",
+        "line": 935
+      },
+      {
+        "pattern": "^(\\w+)\\s+([\\d.]+)\\s*-\\s*([\\d.]+)$",
+        "flags": "i",
+        "line": 953
+      },
+      {
+        "pattern": "^electron\\s*(>=?|<=?)\\s*([\\d.]+)$",
+        "flags": "i",
+        "line": 966
+      },
+      {
+        "pattern": "^node\\s*(>=?|<=?)\\s*([\\d.]+)$",
+        "flags": "i",
+        "line": 977
+      },
+      {
+        "pattern": "^(\\w+)\\s*(>=?|<=?)\\s*([\\d.]+)$",
+        "flags": "",
+        "line": 992
+      },
+      {
+        "pattern": "^(firefox|ff|fx)\\s+esr$",
+        "flags": "i",
+        "line": 1007
+      },
+      {
+        "pattern": "(operamini|op_mini)\\s+all",
+        "flags": "i",
+        "line": 1013
+      },
+      {
+        "pattern": "^electron\\s+([\\d.]+)$",
+        "flags": "i",
+        "line": 1019
+      },
+      {
+        "pattern": "^node\\s+(\\d+(\\.\\d+)?(\\.\\d+)?)$",
+        "flags": "i",
+        "line": 1031
+      },
+      {
+        "pattern": "^current\\s+node$",
+        "flags": "i",
+        "line": 1051
+      },
+      {
+        "pattern": "^maintained\\s+node\\s+versions$",
+        "flags": "i",
+        "line": 1057
+      },
+      {
+        "pattern": "^phantomjs\\s+1.9$",
+        "flags": "i",
+        "line": 1071
+      },
+      {
+        "pattern": "^phantomjs\\s+2.1$",
+        "flags": "i",
+        "line": 1077
+      },
+      {
+        "pattern": "^(\\w+)\\s+(tp|[\\d.]+)$",
+        "flags": "i",
+        "line": 1083
+      },
+      {
+        "pattern": "^tp$",
+        "flags": "i",
+        "line": 1085
+      },
+      {
+        "pattern": "\\.0$",
+        "flags": "",
+        "line": 1094
+      },
+      {
+        "pattern": "^browserslist config$",
+        "flags": "i",
+        "line": 1110
+      },
+      {
+        "pattern": "^extends (.+)$",
+        "flags": "i",
+        "line": 1116
+      },
+      {
+        "pattern": "^defaults$",
+        "flags": "i",
+        "line": 1122
+      },
+      {
+        "pattern": "^dead$",
+        "flags": "i",
+        "line": 1128
+      },
+      {
+        "pattern": "^(\\w+)$",
+        "flags": "i",
+        "line": 1141
+      }
+    ]
+  },
+  {
+    "filename": "/Users/pqc/Desktop/browserslist-main/node.js",
+    "regexps": [
+      {
+        "pattern": "^\\s*\\[(.+)]\\s*$",
+        "flags": "",
+        "line": 8
+      },
+      {
+        "pattern": "^browserslist-config-",
+        "flags": "",
+        "line": 9
+      },
+      {
+        "pattern": "@[^/]+\\/browserslist-config(-|$|\\/)",
+        "flags": "",
+        "line": 10
+      },
+      {
+        "pattern": "^@[^/]+\\/",
+        "flags": "",
+        "line": 24
+      },
+      {
+        "pattern": "[^\\w-]",
+        "flags": "g",
+        "line": 230
+      },
+      {
+        "pattern": "[^\\w-]",
+        "flags": "g",
+        "line": 246
+      },
+      {
+        "pattern": "#[^\\n]*",
+        "flags": "g",
+        "line": 265
+      },
+      {
+        "pattern": "\\n|,",
+        "flags": "",
+        "line": 266
+      }
+    ]
+  },
+  {
+    "filename": "/Users/pqc/Desktop/browserslist-main/update-db.js",
+    "regexps": [
+      {
+        "pattern": "version \"(.*?)\"",
+        "flags": "",
+        "line": 120
+      },
+      {
+        "pattern": "(\\n{2,})",
+        "flags": "",
+        "line": 123
+      },
+      {
+        "pattern": "version \"[^\"]+\"",
+        "flags": "",
+        "line": 133
+      },
+      {
+        "pattern": "resolved \"[^\"]+\"",
+        "flags": "",
+        "line": 136
+      },
+      {
+        "pattern": "integrity .+",
+        "flags": "",
+        "line": 139
+      },
+      {
+        "pattern": ":\\s?",
+        "flags": "",
+        "line": 159
+      },
+      {
+        "pattern": "([/:])",
+        "flags": "",
+        "line": 163
+      },
+      {
+        "pattern": "integrity: .+",
+        "flags": "",
+        "line": 175
+      }
+    ]
+  }
+]
