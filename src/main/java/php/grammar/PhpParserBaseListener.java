@@ -3,17 +3,12 @@ package php.grammar;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
-import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.checkerframework.checker.units.qual.A;
 import php.grammar.PhpParser.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import utils.bean.regexps;
+import java.util.*;
 
 /**
  * This class provides an empty implementation of {@link PhpParserListener},
@@ -21,12 +16,23 @@ import java.util.List;
  * of the available methods.
  */
 public class PhpParserBaseListener implements PhpParserListener {
+
+    public static String[] RegexFunctionKey = new String[]{
+            "preg_filter",
+            "preg_grep",
+            "preg_match_all",
+            "preg_match",
+            "preg_replace_callback",
+            "preg_replace",
+            "preg_split"};
+
     /**
      * {@inheritDoc}
      *
      * <p>The default implementation does nothing.</p>
      */
     @Override
+
     public void enterHtmlDocument(HtmlDocumentContext ctx) {
     }
 
@@ -2836,11 +2842,6 @@ public class PhpParserBaseListener implements PhpParserListener {
      */
     @Override
     public void visitTerminal(TerminalNode node) {
-        Token token = node.getSymbol();
-        String value = token.getText();
-        int type = token.getType();
-//        System.out.println(value +"  " + type);
-//        System.out.println(node);
     }
 
     /**
@@ -2854,17 +2855,27 @@ public class PhpParserBaseListener implements PhpParserListener {
 
     public HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
 
-    public void visitFunctionCallContext(FunctionCallContext callContext) {
+    /**
+     * 处理正则表达式调用函数
+     *
+     * @param callContext
+     * @param regexs
+     */
+    public void visitFunctionCallContext(FunctionCallContext callContext, LinkedList<regexps> regexs) {
         String functionName = callContext.functionCallName().qualifiedNamespaceName().namespaceNameList().identifier(0).getText();
-        if (functionName.startsWith("preg")) {
+        if (Arrays.asList(RegexFunctionKey).contains(functionName)) {
+            int line = callContext.getStart().getLine();
             RuleContext context = callContext.actualArguments().arguments().actualArgument(0).expression();
-//            RuleContext context1 = callContext.actualArguments().arguments().actualArgument(1);
+            ArrayList<String> list = new ArrayList<>();
             if (context instanceof ScalarExpressionContext) {
-                System.out.println("regex: " + Arrays.toString(getValueFromExpression(context).toArray()));
+                list = getValueFromExpression(context);
             } else if (context instanceof ChainExpressionContext) {
-                System.out.println("regex变量: " + context.getText() + " : " + Arrays.toString(getValueFromExpression(context).toArray()));
+                list = getValueFromExpression(context);
             } else if (context instanceof ArithmeticExpressionContext) {
-                System.out.println("regex组合: " + context.getText() + " : " + Arrays.toString(getValueFromExpression(context).toArray()));
+                list = getValueFromExpression(context);
+            }
+            for (String str : list) {
+                regexs.add(new regexps(line, str));
             }
         }
     }

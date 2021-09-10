@@ -2,17 +2,35 @@ package php.grammar;
 
 import org.antlr.v4.runtime.tree.*;
 
+import utils.bean.regexps;
+import java.util.LinkedList;
+
 public class PhpWalker extends ParseTreeWalker {
+
+    public LinkedList<regexps> regexs;
+
+    public PhpWalker() {
+        regexs = new LinkedList<>();
+    }
+
 
     @Override
     public void walk(ParseTreeListener baselLstener, ParseTree t) {
         PhpParserBaseListener listener = (PhpParserBaseListener) baselLstener;
         if (t instanceof PhpParser.FunctionCallContext) {
             PhpParser.FunctionCallContext callContext = (PhpParser.FunctionCallContext) t;
-            listener.visitFunctionCallContext(callContext);
+            try {
+                listener.visitFunctionCallContext(callContext,regexs);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else if (t instanceof PhpParser.AssignmentExpressionContext) {
-            PhpParser.AssignmentExpressionContext context = (PhpParser.AssignmentExpressionContext) t;
-            listener.visitAssignmentExpressionContext(context);
+            try {
+                PhpParser.AssignmentExpressionContext context = (PhpParser.AssignmentExpressionContext) t;
+                listener.visitAssignmentExpressionContext(context);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         if (t instanceof ErrorNode) {
             listener.visitErrorNode((ErrorNode) t);
@@ -22,7 +40,6 @@ public class PhpWalker extends ParseTreeWalker {
             RuleNode r = (RuleNode) t;
             this.enterRule(listener, r);
             int n = r.getChildCount();
-
             for (int i = 0; i < n; ++i) {
                 this.walk(listener, r.getChild(i));
             }

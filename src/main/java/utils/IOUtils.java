@@ -1,4 +1,4 @@
-package java.utils;
+package utils;
 
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;

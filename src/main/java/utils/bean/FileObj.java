@@ -1,4 +1,4 @@
-package java.bean;
+package utils.bean;
 
 import java.util.LinkedList;
 
