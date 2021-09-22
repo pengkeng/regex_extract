@@ -5,14 +5,23 @@ package utils.bean;
  */
 public class regexps {
     private String pattern;
-    private int line;
     private String flags;
+    private String funcName;
+    private int line;
 
     public regexps(int line, String pattern) {
 
         this.pattern = pattern;
-        this.line = line;
         this.flags = "";
+        this.line = line;
+    }
+
+    public regexps(int line, String pattern, String funcName) {
+
+        this.pattern = pattern;
+        this.flags = "";
+        this.funcName = funcName;
+        this.line = line;
     }
 
     public int getLine() {
@@ -29,5 +38,13 @@ public class regexps {
 
     public void setPattern(String pattern) {
         this.pattern = pattern;
+    }
+
+    public String getFuncName() {
+        return funcName;
+    }
+
+    public void setFuncName(String funcName) {
+        this.funcName = funcName;
     }
 }

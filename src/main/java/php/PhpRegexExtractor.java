@@ -100,8 +100,11 @@ public class PhpRegexExtractor {
 
             PhpLexer phpLexer = new PhpLexer(CharStreams.fromFileName(filePath));
             CommonTokenStream tokenStream = new CommonTokenStream(phpLexer);
+
             PhpParser phpParser = new PhpParser(tokenStream);
+
             ParseTree tree = phpParser.htmlDocument();
+
 
             PhpWalker walker = new PhpWalker();
             PhpParserListener listener = new PhpParserBaseListener();

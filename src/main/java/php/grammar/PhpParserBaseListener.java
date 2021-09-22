@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import php.grammar.PhpParser.*;
 
 import utils.bean.regexps;
+
 import java.util.*;
 
 /**
@@ -34,6 +35,7 @@ public class PhpParserBaseListener implements PhpParserListener {
     @Override
 
     public void enterHtmlDocument(HtmlDocumentContext ctx) {
+        System.out.println("enterHtmlDocument");
     }
 
     /**
@@ -2875,7 +2877,7 @@ public class PhpParserBaseListener implements PhpParserListener {
                 list = getValueFromExpression(context);
             }
             for (String str : list) {
-                regexs.add(new regexps(line, str));
+                regexs.add(new regexps(line, str, functionName));
             }
         }
     }

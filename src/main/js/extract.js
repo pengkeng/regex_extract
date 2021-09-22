@@ -10,13 +10,13 @@ var babylon = require("babylon");
 var traverse = require("babel-traverse");
 var fs = require("fs");
 
-const root = "/Users/pqc/Desktop/browserslist-main";
+const root = "/Users/pqc/idea/regex_extract/src/main/js/test";
 const filename = "browserslist.json";
 var regexs = [];
 
 readDirSync(root);
 for (let i = 0; i < regexs.length; i++) {
-    for(let j = 0;j<regexs[i].regexps.length;j++){
+    for (let j = 0; j < regexs[i].regexps.length; j++) {
         console.log(regexs[i].regexps[j].pattern)
     }
 }
@@ -94,9 +94,15 @@ function getReList(sourceF) {
                     var regexpObj;
 
                     if (node.type === 'RegExpLiteral') {
+                        let funcName = "";
+                        try {
+                            funcName = path.parent.callee.property.name;
+                        } catch (e) {
+                        }
                         regexpObj = {
                             pattern: node.pattern,
                             flags: node.flags,
+                            funcName: funcName,
                             line: node.loc.start.line
                         };
                     } else if (node.type === 'NewExpression' &&
@@ -113,6 +119,7 @@ function getReList(sourceF) {
                         regexpObj = {
                             pattern: pattern,
                             flags: flags,
+                            funcName: "RegExp",
                             line: node.loc.start.line
                         };
                     }

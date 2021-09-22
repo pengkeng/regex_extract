@@ -6,7 +6,7 @@ $replacement = 'runoob ${2},$3';
 $subject = array('1', 'a', '2', 'b', '3', 'A', 'B', '4');
 $pattern = array('/\d/', '/[a-z]/', '/[1a]/');
 $replace = array('A:$0', 'B:$0', 'C:$0');
-$replace1 = $string+ $pattern2 +"\w";
+$replace1 = $string + $pattern2 +"\w";
 $replace2 = "abc"+ "\w[a-z]"+"aa";
 $replace5 = "abc"+ "\w[a-z]" - "aa";
 $replace3 = $replace2+ "\w[a-z]";
@@ -26,8 +26,7 @@ print_r($fl_array);
 
 function writeName()
 {
-    echo "Kai Jim Refsnes";
-
+echo "Kai Jim Refsnes";
 echo preg_replace($pattern2, $replacement, $string);
 echo preg_replace($replace1, $replacement, $string);
 echo preg_replace($replace2, $replacement, $string);
@@ -57,6 +56,8 @@ function next_year($matches)
   // 通常: $matches[0]是完成的匹配
   // $matches[1]是第一个捕获子组的匹配
   // 以此类推
+  $pattern2 = '/new(\w+) (\d+), (\d+)/i';
+   echo preg_replace($pattern2, $replacement, $string);
   return $matches[1].($matches[2]+1);
 }
 echo preg_replace_callback(

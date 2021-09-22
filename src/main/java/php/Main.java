@@ -1,13 +1,8 @@
 package php;
 
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.PredictionMode;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.apache.commons.io.FileUtils;
 import php.grammar.*;
 
-import java.RegexExtractor;
 import java.io.File;
 import java.io.IOException;
 

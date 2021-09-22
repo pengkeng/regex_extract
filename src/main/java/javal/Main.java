@@ -1,11 +1,11 @@
-package java;
+package javal;
 
 import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
-        String rootPath = "/Users/pqc/idea/regex_extract/test";
-        String resultFile = "test.json";
+        String rootPath = "src/main/java/javal/example/";
+        String resultFile = "javatest.json";
         new RegexExtractor(new File(rootPath), new File(resultFile)).extractToFile();
 //        CVE_Company();
     }

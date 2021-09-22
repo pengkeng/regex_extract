@@ -1,4 +1,4 @@
-package java;
+package javal;
 
 import utils.bean.FileObj;
 import utils.bean.regexps;
@@ -156,16 +156,16 @@ public class RegexExtractor {
             String name = ((MethodCallExpr) compilationUnit).getName().toString();
             switch (name) {
                 case "matches":
-                    regexProcess(compilationUnit, list, regexs);
+                    regexProcess(compilationUnit, list, regexs,name);
                     break;
                 case "compile":
-                    regexProcess(compilationUnit, list, regexs);
+                    regexProcess(compilationUnit, list, regexs,name);
                     break;
                 case "replaceAll":
-                    regexProcess(compilationUnit, list, regexs);
+                    regexProcess(compilationUnit, list, regexs,name);
                     break;
                 case "replace":
-                    regexProcess(compilationUnit, list, regexs);
+                    regexProcess(compilationUnit, list, regexs,name);
                     break;
                 default:
                     break;
@@ -178,12 +178,12 @@ public class RegexExtractor {
 
     /**
      * 从当前AST节点提取re
-     *
-     * @param compilationUnit
+     *  @param compilationUnit
      * @param list
      * @param regexs
+     * @param name
      */
-    private void regexProcess(Node compilationUnit, HashMap<String, String> list, LinkedList<regexps> regexs) {
+    private void regexProcess(Node compilationUnit, HashMap<String, String> list, LinkedList<regexps> regexs, String name) {
         NodeList<Expression> arguments = ((MethodCallExpr) compilationUnit).getArguments();
         if (arguments.size() > 0) {
             Expression argument = arguments.get(0);
@@ -201,7 +201,7 @@ public class RegexExtractor {
                     line = argument.getRange().get().begin.line;
                 }
                 System.out.println(regex);
-                regexs.add(new regexps(line, regex));
+                regexs.add(new regexps(line, regex,name));
             }
         }
     }

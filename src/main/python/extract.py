@@ -94,10 +94,18 @@ def log(msg):
 class RegexpInstance():
     pattern = ''
     flags = ''
+    funcName = ''
+    line = ''
 
     def __init__(self, pattern_, flags_):
         self.pattern = pattern_
         self.flags = flags_
+
+    def __init__(self, pattern_, flags_, func_name_, line_):
+        self.pattern = pattern_
+        self.flags = flags_
+        self.funcName = func_name_
+        self.line = line_
 
     def getPattern(self):
         return self.pattern
@@ -221,6 +229,7 @@ class ASTWalkerForRegexps(ast.NodeVisitor):
             # Is this a call of the form x.y, where x is an re alias and y is a regexpFuncName ?
             funcID = node.func.value.id
             funcName = node.func.attr
+            line = str(node.func.lineno)
             # log("111")
             if funcID in self.reAliases and funcName in regexpFuncNames:
                 # log('Got an RE: {}.{}'.format(funcID, funcName))
@@ -281,7 +290,7 @@ class ASTWalkerForRegexps(ast.NodeVisitor):
                 # logStr = 'funcName <{}>, pattern <{}>, flags <{}>'.format(funcName, pattern, flagsString)
                 # log(logStr)
                 # sys.stdout.write(logStr + '\n')
-                self.regexps.append(RegexpInstance(pattern, flagsString))
+                self.regexps.append(RegexpInstance(pattern, flagsString, funcName, line))
         except Exception as e:
             log('DEBUG: ASTWalkerForRegexps: visit_Call exception: {}'.format(e))
 
