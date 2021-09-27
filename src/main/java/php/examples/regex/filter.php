@@ -33,7 +33,7 @@ echo preg_replace($replace2, $replacement, $string);
 echo preg_replace($replace3 + $replace4, $replacement, $string);
 }
 
-$fl_array = preg_grep("/^(\d+)?\.\d+$/", $array);
+$fl_array = preg_grep("/^(\d+)?\.\d+$/i", $array);
 print_r($fl_array);
 
 $userinfo = "Name: <b>PHP</b> <br> Title: <b>Programming Language</b>";
