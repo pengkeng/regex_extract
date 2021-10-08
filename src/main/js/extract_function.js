@@ -10,17 +10,16 @@ var babylon = require("babylon");
 var traverse = require("babel-traverse");
 var fs = require("fs");
 
-const root = "C:\\Users\\pengqc\\IdeaProjects\\regex_extract\\src\\main\\js\\example\\";
-const filename = "browserslist.json";
-var regexs = [];
+const root = "D:/pqc/npm/extract";
+var func_regex = /(_fnSetObjectDataFn|applyPatches|assign|bodyParser|buildQueryString|classToPlainFromExist|clone|collide|connie|create|deep(Copy|Defaults|FillIn|Merge|MixIn|Set)?|defaultsDeep|del|deparam|depthedLookup|diff|dot-object|extend|expand|handler|immutable|insert|jq_deparam|linuxCmdline|loadPackageDefinition|matrixToAsciiTable|merge|mixin-deep|nestie|override|parse(_str|ComplexParam|QueryString)?|QueryStringToJSON|recursive|set(ByPath|Getter|In|OrGet|ParamValue|Path(Value)?|Value|ter)?|undefsafe|unflatten|zipObjectDeep)/i
 
-readDirSync(root);
-for (let i = 0; i < regexs.length; i++) {
-    for (let j = 0; j < regexs[i].regexps.length; j++) {
-        console.log(regexs[i].regexps[j].pattern)
-    }
+for (let i = 1; i <= 91; i++) {
+    let path = root + "/" + i
+    var regexs = [];
+    readDirSync(path);
+    let filename = "D:/pqc/npm/fun/" + i + ".json";
+    fs.writeFileSync(filename, JSON.stringify(regexs, null, 4));
 }
-fs.writeFileSync(filename, JSON.stringify(regexs,null,4));
 
 /**
  * 递归遍历文件夹
@@ -40,8 +39,8 @@ function readDirSync(path) {
             var file = path + "/" + ele;
             if (file.endsWith(".js")) {
                 var stat = fs.statSync(file)
-                if (stat.size < 500 * 1024) {
-                    console.log(stat.size);
+                if (stat.size < 500 * 1000) {
+                    console.log(file);
                     var result = getReList(file);
                     if (result.regexps.length > 0) {
                         console.log(result);
@@ -84,7 +83,7 @@ function getReList(sourceF) {
     }
 
     if (!ast) {
-        bail_couldNotParse(sourceF);
+        ast = 0;
     }
 
     var allStaticRegexps = [];
@@ -95,36 +94,28 @@ function getReList(sourceF) {
                 var node = path.node;
                 try {
                     var regexpObj;
-
-                    if (node.type === 'RegExpLiteral') {
+                    if (node.type === 'CallExpression') {
                         let funcName = "";
+                        var args = []
                         try {
-                            funcName = path.parent.callee.property.name;
+                            funcName = node.callee.property.name;
                         } catch (e) {
+                            funcName = node.callee.name;
                         }
-                        regexpObj = {
-                            pattern: node.pattern,
-                            flags: node.flags,
-                            funcName: funcName,
-                            line: node.loc.start.line
-                        };
-                    } else if (node.type === 'NewExpression' &&
-                        node.callee.type === 'Identifier' && node.callee.name === 'RegExp') {
-                        var pattern = (node['arguments'][0].type === 'StringLiteral') ?
-                            node['arguments'][0].value : 'DYNAMIC-PATTERN';
+                        if (funcName.search(func_regex) >= 0) {
+                            try {
+                                node.arguments.forEach((arg) => {
+                                    args.push(arg.name);
+                                });
+                            } catch (e) {
 
-                        var flags = '';
-                        if (2 <= node['arguments'].length) {
-                            flags = (node['arguments'][1].type === 'StringLiteral') ?
-                                node['arguments'][1].value : 'DYNAMIC-FLAGS';
+                            }
+                            regexpObj = {
+                                funcName: funcName,
+                                arguments: args.toString(),
+                                line: node.loc.start.line
+                            };
                         }
-
-                        regexpObj = {
-                            pattern: pattern,
-                            flags: flags,
-                            funcName: "RegExp",
-                            line: node.loc.start.line
-                        };
                     }
                 } catch (e) {
                 }

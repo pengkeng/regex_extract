@@ -35,7 +35,6 @@ public class PhpParserBaseListener implements PhpParserListener {
     @Override
 
     public void enterHtmlDocument(HtmlDocumentContext ctx) {
-        System.out.println("enterHtmlDocument");
     }
 
     /**
