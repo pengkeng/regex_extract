@@ -13,7 +13,7 @@ var fs = require("fs");
 const root = "D:/pqc/npm/extract";
 var func_regex = /(_fnSetObjectDataFn|applyPatches|assign|bodyParser|buildQueryString|classToPlainFromExist|clone|collide|connie|create|deep(Copy|Defaults|FillIn|Merge|MixIn|Set)?|defaultsDeep|del|deparam|depthedLookup|diff|dot-object|extend|expand|handler|immutable|insert|jq_deparam|linuxCmdline|loadPackageDefinition|matrixToAsciiTable|merge|mixin-deep|nestie|override|parse(_str|ComplexParam|QueryString)?|QueryStringToJSON|recursive|set(ByPath|Getter|In|OrGet|ParamValue|Path(Value)?|Value|ter)?|undefsafe|unflatten|zipObjectDeep)/i
 
-for (let i = 1; i <= 91; i++) {
+for (let i = 17; i <= 91; i++) {
     let path = root + "/" + i
     var regexs = [];
     readDirSync(path);

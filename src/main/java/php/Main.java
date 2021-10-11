@@ -14,7 +14,7 @@ public class Main {
 
         String rootPath = "D:\\pqc\\php\\pkg\\extract";
         File[] dirs = new File(rootPath).listFiles();
-        for (int i =110226 ; i < dirs.length; i++) {
+        for (int i =148155 ; i < dirs.length; i++) {
             File path = dirs[i];
             String resultFile = "D:\\pqc\\php\\result\\" + i + ".json";
             new PhpRegexExtractor(path, new File(resultFile)).extractToFile();
