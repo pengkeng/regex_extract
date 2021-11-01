@@ -1,5 +1,5 @@
 r = "I am runoob site. welcome to runoob site.";
-if ($bar =~ /run/i){
+if ($bar =~ /run/){
    print "第一次匹配\n";
 }else{
    print "第一次不匹配\n";

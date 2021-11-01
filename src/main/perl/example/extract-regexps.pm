@@ -68,7 +68,7 @@ sub scan_file {
         }
         elsif (-f $_) {
             my $sourceFile = $_;
-            if ($sourceFile =~ /.*\.p(l|m)$/) {
+            if ($sourceFile =~ /.*\.pl$/) {
                 print "文件 $sourceFile\n";
                 my $d = extractRegexesWithFile($sourceFile);
                 push @data, $d;
