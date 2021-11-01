@@ -5,11 +5,26 @@ using System.IO;
 
 public class Example
 {
+ public string pattern1 = @"^[0-9A-Z]([-.\w]*[0-9A-Z])*$" +"123";
+ public string pattern2 = @"^[0-9A-Z]([-.\w]*[0-9A-Z])*$" +"123" + "234";
+ public string pattern3 = pattern1 +"123" + "234";
+ public string pattern4 = pattern1 +pattern2;
+ public string pattern5 = pattern4;
+ public string pattern6 = "123456";
+ public string pattern7 ;
+
+
+
    public static void Main()
    {
-      string pattern = @"^[0-9A-Z]([-.\w]*[0-9A-Z])*$";
-      string re;
-      re = "[a-z\w]*";
+        Regex.IsMatch(partNumber, pattern3);
+                   Console.WriteLine("{0} {1} a valid part number.",
+                                     partNumber,
+                                     Regex.IsMatch(partNumber, pattern3,RegexOptions.IgnoreCase)));
+    pattern7 = pattern1 +"123" + "234";
+      string pattern = @"pattern^[0-9A-Z]([-.\w]*[0-9A-Z])*$";
+      string rep = " ";
+      rep = @"4512\w";
 
       Match m = Regex.Match("input", pattern, RegexOptions.IgnoreCase);
 
@@ -30,7 +45,7 @@ public class Example
          "Utilities.RegularExpressions",
          true);
 
-         new RegexCompilationInfo(
+      string str =   new RegexCompilationInfo(
                   @"test\b(\w+((\r?\n)|,?\s))*\w+[.?:;!]",
                   RegexOptions.Multiline,
                   "SentencePattern",
@@ -42,15 +57,16 @@ public class Example
       public static void isMatch()
       {
 
+  RegexOptions options = RegexOptions.IgnoreCase;
  string[] partNumbers= { "1298-673-4192", "A08Z-931-468a",
                               "_A90-123-129X", "12345-KKA-1230",
                               "0919-2893-1256" };
-     string pattern3 = @"^[a-zA-Z0-9]\d{2}[a-zA-Z0-9](-\d{3}){2}[A-Za-z0-9]$";
+     string pattern3 = @"pattern3^[a-zA-Z0-9]\d{2}[a-zA-Z0-9](-\d{3}){2}[A-Za-z0-9]$";
      Regex.IsMatch(partNumber, pattern3);
                 Console.WriteLine("{0} {1} a valid part number.",
                                   partNumber,
                                   Regex.IsMatch(partNumber, pattern3));
-      string pattern4 = @"^[A-Z0-9]\d{2}[A-Z0-9](-\d{3}){2}[A-Z0-9]$";
+      string pattern4 = @"pattern4^[A-Z0-9]\d{2}[A-Z0-9](-\d{3}){2}[A-Z0-9]$";
          Console.WriteLine("{0} {1} a valid part number.",
                            partNumber,
                            Regex.IsMatch(partNumber, pattern4, RegexOptions.IgnoreCase)
@@ -59,11 +75,11 @@ public class Example
          string[] partNumbers= { "1298-673-4192", "A08Z-931-468a",
                                  "_A90-123-129X", "12345-KKA-1230",
                                  "0919-2893-1256" };
-         string pattern5 = @"^[A-Z0-9]\d{2}[A-Z0-9](-\d{3}){2}[A-Z0-9]$";
+         string pattern5 = @"pattern5^[A-Z0-9]\d{2}[A-Z0-9](-\d{3}){2}[A-Z0-9]$";
             try {
                Console.WriteLine("{0} {1} a valid part number.",
                                  partNumber,
-                                 Regex.IsMatch(partNumber, pattern5, RegexOptions.IgnoreCase)
+                                 Regex.IsMatch(partNumber, pattern5, RegexOptions.IgnoreCase|RegexOptions.Compiled)
                                                ? "is" : "is not", TimeSpan.FromMilliseconds(500));
             }
             catch (RegexMatchTimeoutException e) {

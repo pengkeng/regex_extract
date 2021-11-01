@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
 
@@ -14,7 +16,7 @@ public class Main {
 
         String rootPath = "D:\\pqc\\php\\pkg\\extract";
         File[] dirs = new File(rootPath).listFiles();
-        for (int i =148155 ; i < dirs.length; i++) {
+        for (int i = 148155; i < dirs.length; i++) {
             File path = dirs[i];
             String resultFile = "D:\\pqc\\php\\result\\" + i + ".json";
             new PhpRegexExtractor(path, new File(resultFile)).extractToFile();

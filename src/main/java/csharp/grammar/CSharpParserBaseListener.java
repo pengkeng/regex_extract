@@ -1,11 +1,14 @@
 // Generated from /Users/pqc/idea/regex_extract/src/main/java/csharp/src/CSharpParser.g4 by ANTLR 4.9.1
 package csharp.grammar;
 
+import csharp.grammar.CSharpParser.Additive_expressionContext;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class provides an empty implementation of {@link CSharpParserListener},
@@ -13,6 +16,131 @@ import org.antlr.v4.runtime.tree.TerminalNode;
  * of the available methods.
  */
 public class CSharpParserBaseListener implements CSharpParserListener {
+
+    public HashMap<String, String> hashMapPattern = new HashMap<>();
+    public HashMap<String, String> hashMapFlag = new HashMap<>();
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterObjectCreationExpression(CSharpParser.ObjectCreationExpressionContext ctx) {
+        if (ctx.getText().startsWith("newRegex") || ctx.getText().startsWith("newRegexCompilationInfo")) {
+            CSharpParser.Argument_listContext context = ctx.object_creation_expression().argument_list();
+            String pattern = getPattern(context, 0);
+            System.out.println("enterObjectCreationExpression" + pattern);
+            String flags = getFlags(context, 1);
+            System.out.println("enterObjectCreationExpression" + flags);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterPrimary_expression(CSharpParser.Primary_expressionContext ctx) {
+        if (ctx.getText().startsWith("Regex.Match") || ctx.getText().startsWith("Regex.IsMatch") || ctx.getText().startsWith("Regex.Matches")) {
+
+            CSharpParser.Argument_listContext context = ctx.method_invocation(0).argument_list();
+            System.out.println(ctx.start.getLine() + "  " + ctx.getText() + " " + ctx.getClass());
+            String pattern = getPattern(context, 1);
+            System.out.println("enterPrimary_expression" + pattern);
+            String flags = getFlags(context, 2);
+            System.out.println("enterPrimary_expression" + flags);
+        }
+    }
+
+    private String getFlags(CSharpParser.Argument_listContext argument_listContext, int index) {
+        if (argument_listContext.argument().size() > index) {
+            RuleContext item = argument_listContext.argument(index);
+            while (item.getChildCount() == 1) {
+                if (item.getChild(0) instanceof TerminalNode) {
+                    break;
+                }
+                item = (RuleContext) item.getChild(0);
+            }
+            if (item instanceof CSharpParser.IdentifierContext) {
+                return hashMapFlag.getOrDefault(item.getText(), "");
+            } else {
+                return item.getText().replace(" ", "");
+            }
+        }
+        return "";
+    }
+
+    private String getPattern(CSharpParser.Argument_listContext argument_listContext, int index) {
+        if (argument_listContext.argument().size() > index) {
+            RuleContext item = argument_listContext.argument(index);
+            while (item.getChildCount() == 1) {
+                if (item.getChild(0) instanceof TerminalNode) {
+                    break;
+                }
+                item = (RuleContext) item.getChild(0);
+            }
+            if (item instanceof CSharpParser.String_literalContext) {
+                if (item.getText().startsWith("@")) {
+                    return item.getText().substring(2, item.getText().length() - 1);
+                } else {
+                    return item.getText().substring(1, item.getText().length() - 1);
+                }
+            } else if (item instanceof CSharpParser.IdentifierContext) {
+                return hashMapPattern.getOrDefault(item.getText(), "");
+            }
+        }
+        return "";
+    }
+
+    private void extractedString(RuleContext context, String text) {
+        try {
+            StringBuilder value = new StringBuilder();
+            while (context.getChildCount() == 1) {
+                if (context.getChild(0) instanceof TerminalNode) {
+                    break;
+                }
+                context = (RuleContext) context.getChild(0);
+            }
+            if (context instanceof Additive_expressionContext) {
+                Additive_expressionContext c = (Additive_expressionContext) context;
+                for (int i = 0; i < c.multiplicative_expression().size(); i++) {
+                    RuleContext item = c.multiplicative_expression(i);
+                    while (item.getChildCount() == 1) {
+                        if (item.getChild(0) instanceof TerminalNode) {
+                            break;
+                        }
+                        item = (RuleContext) item.getChild(0);
+                    }
+                    if (item instanceof CSharpParser.String_literalContext) {
+                        if (item.getText().startsWith("@")) {
+                            value.append(item.getText(), 2, item.getText().length() - 1);
+                        } else {
+                            value.append(item.getText(), 1, item.getText().length() - 1);
+                        }
+                    } else if (item instanceof CSharpParser.IdentifierContext) {
+                        value.append(hashMapPattern.getOrDefault(item.getText(), ""));
+                    }
+                }
+            } else if (context instanceof CSharpParser.String_literalContext) {
+                if (context.getText().startsWith("@")) {
+                    value.append(context.getText(), 2, context.getText().length() - 1);
+                } else {
+                    value.append(context.getText(), 1, context.getText().length() - 1);
+                }
+            } else if (context instanceof CSharpParser.IdentifierContext) {
+                value.append(hashMapPattern.getOrDefault(context.getText(), ""));
+            } else if (context.getText().startsWith("RegexOptions")) {
+                hashMapFlag.put(text, context.getText());
+            }
+            if (value.toString().length() > 0) {
+                hashMapPattern.put(text, value.toString());
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -254,14 +382,73 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      */
     @Override
     public void enterArgument(CSharpParser.ArgumentContext ctx) {
-        if(ctx.getText().startsWith("Regex.Match") || ctx.getText().startsWith("Regex.IsMatch") || ctx.getText().startsWith("Regex.Matches") ||ctx.getText().startsWith("newRegex")){
-            System.out.println(ctx.start.getLine() +" " + ctx.getText() + " " + ctx.getClass());
-            RuleNode node = ctx.expression();
-            while (node.getChildCount()==1){
-                node= (RuleNode) node.getChild(0);
+        if (ctx.getText().startsWith("Regex.Match") || ctx.getText().startsWith("Regex.IsMatch") || ctx.getText().startsWith("Regex.Matches") || ctx.getText().startsWith("newRegex")) {
+            RuleContext context = ctx.expression();
+            while (context.getChildCount() == 1) {
+                context = (RuleContext) context.getChild(0);
             }
-            System.out.println(node.getRuleContext().getText()  +" " + node.getRuleContext().getClass());
+            if (context instanceof CSharpParser.TupleExpressionContext) {
+                CSharpParser.TupleExpressionContext tupleExpressionContext = (CSharpParser.TupleExpressionContext) context;
+                String pattern = getPattern(tupleExpressionContext, ctx.getText().startsWith("newRegex") ? 0 : 1);
+                System.out.println(pattern);
+                String flags = getFlags(tupleExpressionContext, ctx.getText().startsWith("newRegex") ? 1 : 2);
+                System.out.println(flags);
+            } else if (context instanceof CSharpParser.Conditional_expressionContext) {
+                RuleContext temp = ((CSharpParser.Conditional_expressionContext) context).null_coalescing_expression();
+                while (temp.getChildCount() == 1) {
+                    if (temp instanceof CSharpParser.TupleExpressionContext) {
+                        break;
+                    }
+                    temp = (RuleContext) temp.getChild(0);
+                }
+                if (temp instanceof CSharpParser.TupleExpressionContext) {
+                    String pattern = getPattern((CSharpParser.TupleExpressionContext) temp, ctx.getText().startsWith("newRegex") ? 0 : 1);
+                    System.out.println(pattern);
+                    String flags = getFlags((CSharpParser.TupleExpressionContext) temp, ctx.getText().startsWith("newRegex") ? 1 : 2);
+                    System.out.println(flags);
+                }
+            }
         }
+    }
+
+    private String getFlags(CSharpParser.TupleExpressionContext tupleExpressionContext, int index) {
+        if (tupleExpressionContext.argument().size() > index) {
+            RuleContext item = tupleExpressionContext.argument(index);
+            while (item.getChildCount() == 1) {
+                if (item.getChild(0) instanceof TerminalNode) {
+                    break;
+                }
+                item = (RuleContext) item.getChild(0);
+            }
+            if (item instanceof CSharpParser.IdentifierContext) {
+                return hashMapFlag.getOrDefault(item.getText(), "");
+            } else {
+                return item.getText().replace(" ", "");
+            }
+        }
+        return "";
+    }
+
+    private String getPattern(CSharpParser.TupleExpressionContext tupleExpressionContext, int index) {
+        if (tupleExpressionContext.argument().size() > index) {
+            RuleContext item = tupleExpressionContext.argument(index);
+            while (item.getChildCount() == 1) {
+                if (item.getChild(0) instanceof TerminalNode) {
+                    break;
+                }
+                item = (RuleContext) item.getChild(0);
+            }
+            if (item instanceof CSharpParser.String_literalContext) {
+                if (item.getText().startsWith("@")) {
+                    return item.getText().substring(2, item.getText().length() - 1);
+                } else {
+                    return item.getText().substring(1, item.getText().length() - 1);
+                }
+            } else if (item instanceof CSharpParser.IdentifierContext) {
+                return hashMapPattern.getOrDefault(item.getText(), "");
+            }
+        }
+        return "";
     }
 
     /**
@@ -316,6 +503,12 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      */
     @Override
     public void enterAssignment(CSharpParser.AssignmentContext ctx) {
+        try {
+            if (ctx.getChildCount() == 3) {
+                extractedString(ctx.expression(), ctx.unary_expression().getText());
+            }
+        } catch (Exception ignored) {
+        }
     }
 
     /**
@@ -531,7 +724,7 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAdditive_expression(CSharpParser.Additive_expressionContext ctx) {
+    public void enterAdditive_expression(Additive_expressionContext ctx) {
     }
 
     /**
@@ -540,7 +733,7 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAdditive_expression(CSharpParser.Additive_expressionContext ctx) {
+    public void exitAdditive_expression(Additive_expressionContext ctx) {
     }
 
     /**
@@ -649,18 +842,6 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      */
     @Override
     public void exitUnary_expression(CSharpParser.Unary_expressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterPrimary_expression(CSharpParser.Primary_expressionContext ctx) {
-        if(ctx.getText().startsWith("Regex.Match") || ctx.getText().startsWith("Regex.IsMatch") || ctx.getText().startsWith("Regex.Matches")){
-            System.out.println(ctx.start.getLine() +" " + ctx.getText() + " " + ctx.getClass());
-        }
     }
 
     /**
@@ -796,18 +977,6 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      */
     @Override
     public void exitBaseAccessExpression(CSharpParser.BaseAccessExpressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterObjectCreationExpression(CSharpParser.ObjectCreationExpressionContext ctx) {
-        if(ctx.getText().startsWith("newRegex")||ctx.getText().startsWith("newRegexCompilationInfo")){
-            System.out.println(ctx.start.getLine() +" " + ctx.getText() + " " + ctx.getClass());
-        }
     }
 
 
@@ -2214,6 +2383,7 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      */
     @Override
     public void enterLocal_variable_declaration(CSharpParser.Local_variable_declarationContext ctx) {
+
     }
 
     /**
@@ -2250,6 +2420,13 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      */
     @Override
     public void enterLocal_variable_declarator(CSharpParser.Local_variable_declaratorContext ctx) {
+        try {
+            if (ctx.getChildCount() == 3) {
+                RuleContext context = ctx.local_variable_initializer();
+                extractedString(context, ctx.identifier().IDENTIFIER().getSymbol().getText());
+            }
+        } catch (Exception ignored) {
+        }
     }
 
     /**
@@ -3132,6 +3309,13 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      */
     @Override
     public void enterVariable_declarator(CSharpParser.Variable_declaratorContext ctx) {
+        try {
+            if (ctx.getChildCount() == 3) {
+                RuleContext context = ctx.variable_initializer();
+                extractedString(context, ctx.identifier().IDENTIFIER().getSymbol().getText());
+            }
+        } catch (Exception ignored) {
+        }
     }
 
     /**
