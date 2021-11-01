@@ -23,15 +23,13 @@ public class PhpWalker extends ParseTreeWalker {
             PhpParser.FunctionCallContext callContext = (PhpParser.FunctionCallContext) t;
             try {
                 listener.visitFunctionCallContext(callContext, regexs);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ignored) {
             }
         } else if (t instanceof PhpParser.AssignmentExpressionContext) {
             try {
                 PhpParser.AssignmentExpressionContext context = (PhpParser.AssignmentExpressionContext) t;
                 listener.visitAssignmentExpressionContext(context);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ignored) {
             }
         }
         if (t instanceof ErrorNode) {

@@ -10,7 +10,7 @@ var babylon = require("babylon");
 var traverse = require("babel-traverse");
 var fs = require("fs");
 
-const root = "C:\\Users\\pengqc\\IdeaProjects\\regex_extract\\src\\main\\js\\example\\";
+const root = "C:\\Users\\pengqc\\IdeaProjects\\regex_extract\\src\\main\\js\\example";
 const filename = "browserslist.json";
 var regexs = [];
 
@@ -30,14 +30,14 @@ fs.writeFileSync(filename, JSON.stringify(regexs,null,4));
 function readDirSync(path) {
     var pa = fs.readdirSync(path);
     pa.forEach(function (ele, index) {
-        var info = fs.statSync(path + "/" + ele);
+        var info = fs.statSync(path + "\\" + ele);
         if (info.isDirectory()) {
             if (ele.search("test") >= 0 || ele.search("build") >= 0 || ele.search("compile") >= 0) {
                 return;
             }
-            readDirSync(path + "/" + ele);
+            readDirSync(path + "\\" + ele);
         } else {
-            var file = path + "/" + ele;
+            var file = path + "\\" + ele;
             if (file.endsWith(".js")) {
                 var stat = fs.statSync(file)
                 if (stat.size < 500 * 1024) {
