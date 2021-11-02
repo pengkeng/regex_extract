@@ -1,6 +1,6 @@
 [
     {
-        "filename": "C:\\Users\\pengqc\\IdeaProjects\\regex_extract\\src\\main\\js\\example\\test.js",
+        "filename": "/Users/pqc/idea/regex_extract/src/main/js/example/test.js",
         "regexps": [
             {
                 "pattern": "(a*)*abc",

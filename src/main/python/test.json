@@ -1,1 +1,37 @@
-[{"filename": "test/test.py", "regexps": [{"pattern": "(.*) \\\\are (.*?) .*", "flags": "M|I", "funcName": "match", "line": "6"}]}]
+[
+  {
+    "filename": "test/test.py",
+    "regexps": [
+      {
+        "pattern": "(.*) \\\\are (.*?) .*",
+        "flags": "M|I",
+        "funcName": "match",
+        "line": "6"
+      },
+      {
+        "pattern": "dogs",
+        "flags": "M|I",
+        "funcName": "match",
+        "line": "21"
+      },
+      {
+        "pattern": "dogs",
+        "flags": "M|I",
+        "funcName": "search",
+        "line": "27"
+      },
+      {
+        "pattern": "(?P<value>\\d+)",
+        "flags": "",
+        "funcName": "sub",
+        "line": "40"
+      },
+      {
+        "pattern": "\\w\\d",
+        "flags": "",
+        "funcName": "sub",
+        "line": "42"
+      }
+    ]
+  }
+]

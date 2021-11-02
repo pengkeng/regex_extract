@@ -196,13 +196,26 @@ class ASTWalkerForFlags(ast.NodeVisitor):
 class ASTWalkerForRegexps(ast.NodeVisitor):
     reAliases = list()
     regexps = list()
+    strMap = dict()
 
     def __init__(self):
         self.reAliases = list()
         self.regexps = list()
+        self.strMap = dict()
 
     def getRegexps(self):
         return self.regexps
+
+    def visit_Assign(self, node):
+        try:
+            if len(node.targets) == 1 and type(node.targets[0]) is ast.Name and type(node.value) is ast.Str:
+                target = node.targets[0].id
+                value = node.value.s
+                self.strMap[target] = value
+                return
+        except:
+            pass
+        ast.NodeVisitor.generic_visit(self, node)
 
     # ImportFrom: Detect missed aliases for re functions
     def visit_ImportFrom(self, node):
@@ -240,9 +253,10 @@ class ASTWalkerForRegexps(ast.NodeVisitor):
                     # log('Pattern is static')
                     pattern = node.args[0].s
 
-                else:
-                    # log('Pattern is dynamic')
-                    pattern = 'DYNAMIC-PATTERN'
+                elif type(node.args[0]) is ast.Name:
+                    name = node.args[0].id
+                    if name in self.strMap.keys():
+                        pattern = self.strMap[name]
 
                 # Get flags
                 funcCanHaveFlags = False
