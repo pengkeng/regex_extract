@@ -16,7 +16,6 @@ public class CSharpWalker extends ParseTreeWalker {
             this.enterRule(listener, r);
             int n = r.getChildCount();
 
-//            System.out.println(r.getRuleContext().getText() + " " + r.getRuleContext().getClass());
             for (int i = 0; i < n; ++i) {
                 this.walk(listener, r.getChild(i));
             }

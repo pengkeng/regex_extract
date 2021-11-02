@@ -1,0 +1,157 @@
+[
+  {
+    "filename": "src/main/java/csharp/example/regex.cs",
+    "regexps": [
+      {
+        "pattern": "^[0-9A-Z]([-.\\w]*[0-9A-Z])*$123123234",
+        "flags": "",
+        "funcName": "Regex.IsMatch",
+        "line": 20
+      },
+      {
+        "pattern": "^[0-9A-Z]([-.\\w]*[0-9A-Z])*$123123234",
+        "flags": "i",
+        "funcName": "Regex.IsMatch",
+        "line": 23
+      },
+      {
+        "pattern": "pattern^[0-9A-Z]([-.\\w]*[0-9A-Z])*$",
+        "flags": "i",
+        "funcName": "Regex.Match",
+        "line": 29
+      },
+      {
+        "pattern": "pattern^[0-9A-Z]([-.\\w]*[0-9A-Z])*$",
+        "flags": "i",
+        "funcName": "Regex.Match",
+        "line": 31
+      },
+      {
+        "pattern": "\\b(\\w+((\\r?\\n)|,?\\s))*\\w+[.?:;!]",
+        "flags": "s",
+        "funcName": "newRegex",
+        "line": 35
+      },
+      {
+        "pattern": "\\b(\\w+((\\r?\\n)|,?\\s))*\\w+[.?:;!]",
+        "flags": "s",
+        "funcName": "newRegex",
+        "line": 37
+      },
+      {
+        "pattern": "\\b(\\w+((\\r?\\n)|,?\\s))*\\w+[.?:;!]",
+        "flags": "s",
+        "funcName": "newRegex",
+        "line": 39
+      },
+      {
+        "pattern": "\\b(\\w+((\\r?\\n)|,?\\s))*\\w+[.?:;!]",
+        "flags": "m",
+        "funcName": "newRegexCompilationInfo",
+        "line": 41
+      },
+      {
+        "pattern": "test\\b(\\w+((\\r?\\n)|,?\\s))*\\w+[.?:;!]",
+        "flags": "m",
+        "funcName": "newRegexCompilationInfo",
+        "line": 48
+      },
+      {
+        "pattern": "pattern3^[a-zA-Z0-9]\\d{2}[a-zA-Z0-9](-\\d{3}){2}[A-Za-z0-9]$",
+        "flags": "",
+        "funcName": "Regex.IsMatch",
+        "line": 65
+      },
+      {
+        "pattern": "pattern3^[a-zA-Z0-9]\\d{2}[a-zA-Z0-9](-\\d{3}){2}[A-Za-z0-9]$",
+        "flags": "",
+        "funcName": "Regex.IsMatch",
+        "line": 68
+      },
+      {
+        "pattern": "pattern4^[A-Z0-9]\\d{2}[A-Z0-9](-\\d{3}){2}[A-Z0-9]$",
+        "flags": "i",
+        "funcName": "Regex.IsMatch",
+        "line": 72
+      },
+      {
+        "pattern": "pattern^[0-9A-Z]([-.\\w]*[0-9A-Z])*$",
+        "flags": "i",
+        "funcName": "newRegex",
+        "line": 73
+      },
+      {
+        "pattern": "pattern5^[A-Z0-9]\\d{2}[A-Z0-9](-\\d{3}){2}[A-Z0-9]$",
+        "flags": "i",
+        "funcName": "Regex.IsMatch",
+        "line": 82
+      },
+      {
+        "pattern": "(\\w+)\\s+(car)",
+        "flags": "i",
+        "funcName": "newRegex",
+        "line": 99
+      },
+      {
+        "pattern": "\\b\\w*z+\\w*\\b",
+        "flags": "",
+        "funcName": "Regex.Match",
+        "line": 109
+      },
+      {
+        "pattern": "\\ba\\w*\\b",
+        "flags": "i",
+        "funcName": "Regex.Match",
+        "line": 113
+      },
+      {
+        "pattern": "\\b[at]\\w+",
+        "flags": "",
+        "funcName": "newRegex",
+        "line": 122
+      },
+      {
+        "pattern": "\\b[at]\\w+",
+        "flags": "i",
+        "funcName": "newRegex",
+        "line": 124
+      },
+      {
+        "pattern": "\\b[at]\\w+",
+        "flags": "i",
+        "funcName": "newRegex",
+        "line": 125
+      },
+      {
+        "pattern": "\\b[at]\\w+",
+        "flags": "i",
+        "funcName": "newRegex",
+        "line": 126
+      },
+      {
+        "pattern": "(a+)+$",
+        "flags": "i",
+        "funcName": "newRegex",
+        "line": 128
+      },
+      {
+        "pattern": "\\w+  # Matches all the characters in a word.",
+        "flags": "x",
+        "funcName": "Regex.Replace",
+        "line": 143
+      },
+      {
+        "pattern": "(-)|(/)",
+        "flags": "",
+        "funcName": "Regex.Split",
+        "line": 158
+      },
+      {
+        "pattern": "(-)",
+        "flags": "i",
+        "funcName": "Regex.Split",
+        "line": 166
+      }
+    ]
+  }
+]

@@ -6,9 +6,11 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import utils.bean.regexps;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * This class provides an empty implementation of {@link CSharpParserListener},
@@ -19,6 +21,7 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 
     public HashMap<String, String> hashMapPattern = new HashMap<>();
     public HashMap<String, String> hashMapFlag = new HashMap<>();
+    public LinkedList<regexps> regexpsArrayList = new LinkedList<>();
 
     /**
      * {@inheritDoc}
@@ -27,12 +30,16 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      */
     @Override
     public void enterObjectCreationExpression(CSharpParser.ObjectCreationExpressionContext ctx) {
-        if (ctx.getText().startsWith("newRegex") || ctx.getText().startsWith("newRegexCompilationInfo")) {
-            CSharpParser.Argument_listContext context = ctx.object_creation_expression().argument_list();
-            String pattern = getPattern(context, 0);
-            System.out.println("enterObjectCreationExpression" + pattern);
-            String flags = getFlags(context, 1);
-            System.out.println("enterObjectCreationExpression" + flags);
+        try {
+            if (ctx.getText().startsWith("newRegex") || ctx.getText().startsWith("newRegexCompilationInfo")) {
+                CSharpParser.Argument_listContext context = ctx.object_creation_expression().argument_list();
+                String pattern = getPattern(context, 0);
+                String flags = getFlags(context, 1);
+                int line = ctx.start.getLine();
+                regexps re = new regexps(line, flags, pattern, ctx.getText().startsWith("newRegexCompilationInfo") ? "newRegexCompilationInfo" : "newRegex");
+                regexpsArrayList.add(re);
+            }
+        } catch (Exception ignored) {
         }
     }
 
@@ -43,53 +50,62 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      */
     @Override
     public void enterPrimary_expression(CSharpParser.Primary_expressionContext ctx) {
-        if (ctx.getText().startsWith("Regex.Match") || ctx.getText().startsWith("Regex.IsMatch") || ctx.getText().startsWith("Regex.Matches")) {
-
-            CSharpParser.Argument_listContext context = ctx.method_invocation(0).argument_list();
-            System.out.println(ctx.start.getLine() + "  " + ctx.getText() + " " + ctx.getClass());
-            String pattern = getPattern(context, 1);
-            System.out.println("enterPrimary_expression" + pattern);
-            String flags = getFlags(context, 2);
-            System.out.println("enterPrimary_expression" + flags);
+        try {
+            if (ctx.getText().startsWith("Regex.Match") || ctx.getText().startsWith("Regex.IsMatch") || ctx.getText().startsWith("Regex.Matches") || ctx.getText().startsWith("Regex.Replace") || ctx.getText().startsWith("Regex.Split")) {
+                String funcName = getFuncName(ctx.getText());
+                CSharpParser.Argument_listContext context = ctx.method_invocation(0).argument_list();
+                String pattern = getPattern(context, 1);
+                String flags = getFlags(context, ctx.getText().startsWith("Regex.Replace") ? 3 : 2);
+                int line = ctx.start.getLine();
+                regexps re = new regexps(line, flags, pattern, funcName);
+                regexpsArrayList.add(re);
+            }
+        } catch (Exception ignored) {
         }
     }
 
     private String getFlags(CSharpParser.Argument_listContext argument_listContext, int index) {
-        if (argument_listContext.argument().size() > index) {
-            RuleContext item = argument_listContext.argument(index);
-            while (item.getChildCount() == 1) {
-                if (item.getChild(0) instanceof TerminalNode) {
-                    break;
+        try {
+            if (argument_listContext.argument().size() > index) {
+                RuleContext item = argument_listContext.argument(index);
+                while (item.getChildCount() == 1) {
+                    if (item.getChild(0) instanceof TerminalNode) {
+                        break;
+                    }
+                    item = (RuleContext) item.getChild(0);
                 }
-                item = (RuleContext) item.getChild(0);
+                if (item instanceof CSharpParser.IdentifierContext) {
+                    return hashMapFlag.getOrDefault(item.getText(), "");
+                } else {
+                    return item.getText().replace(" ", "");
+                }
             }
-            if (item instanceof CSharpParser.IdentifierContext) {
-                return hashMapFlag.getOrDefault(item.getText(), "");
-            } else {
-                return item.getText().replace(" ", "");
-            }
+        } catch (Exception ignored) {
         }
         return "";
     }
 
     private String getPattern(CSharpParser.Argument_listContext argument_listContext, int index) {
-        if (argument_listContext.argument().size() > index) {
-            RuleContext item = argument_listContext.argument(index);
-            while (item.getChildCount() == 1) {
-                if (item.getChild(0) instanceof TerminalNode) {
-                    break;
+        try {
+            if (argument_listContext.argument().size() > index) {
+                RuleContext item = argument_listContext.argument(index);
+                while (item.getChildCount() == 1) {
+                    if (item.getChild(0) instanceof TerminalNode) {
+                        break;
+                    }
+                    item = (RuleContext) item.getChild(0);
                 }
-                item = (RuleContext) item.getChild(0);
-            }
-            if (item instanceof CSharpParser.String_literalContext) {
-                if (item.getText().startsWith("@")) {
-                    return item.getText().substring(2, item.getText().length() - 1);
-                } else {
-                    return item.getText().substring(1, item.getText().length() - 1);
+                if (item instanceof CSharpParser.String_literalContext) {
+                    if (item.getText().startsWith("@")) {
+                        return item.getText().substring(2, item.getText().length() - 1);
+                    } else {
+                        return item.getText().substring(1, item.getText().length() - 1);
+                    }
+                } else if (item instanceof CSharpParser.IdentifierContext) {
+                    return hashMapPattern.getOrDefault(item.getText(), "");
                 }
-            } else if (item instanceof CSharpParser.IdentifierContext) {
-                return hashMapPattern.getOrDefault(item.getText(), "");
             }
+        } catch (Exception ignored) {
         }
         return "";
     }
@@ -139,6 +155,123 @@ public class CSharpParserBaseListener implements CSharpParserListener {
             }
         } catch (Exception ignored) {
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterArgument(CSharpParser.ArgumentContext ctx) {
+        try {
+            if (ctx.getText().startsWith("Regex.Match") || ctx.getText().startsWith("Regex.IsMatch") || ctx.getText().startsWith("Regex.Matches") || ctx.getText().startsWith("newRegex") || ctx.getText().startsWith("Regex.Replace") || ctx.getText().startsWith("Regex.Split")) {
+                String funcName = getFuncName(ctx.getText());
+                int line = ctx.start.getLine();
+                RuleContext context = ctx.expression();
+                while (context.getChildCount() == 1) {
+                    context = (RuleContext) context.getChild(0);
+                }
+                if (context instanceof CSharpParser.TupleExpressionContext) {
+                    CSharpParser.TupleExpressionContext tupleExpressionContext = (CSharpParser.TupleExpressionContext) context;
+                    String pattern = getPattern(tupleExpressionContext, ctx.getText().startsWith("newRegex") ? 0 : 1);
+                    int index = 2;
+                    if (ctx.getText().startsWith("newRegex")) {
+                        index = 1;
+                    } else if (ctx.getText().startsWith("Regex.Replace")) {
+                        index = 3;
+                    }
+                    String flags = getFlags(tupleExpressionContext, index);
+                    regexps re = new regexps(line, flags, pattern, funcName);
+                    regexpsArrayList.add(re);
+                } else if (context instanceof CSharpParser.Conditional_expressionContext) {
+                    RuleContext temp = ((CSharpParser.Conditional_expressionContext) context).null_coalescing_expression();
+                    while (temp.getChildCount() == 1) {
+                        if (temp instanceof CSharpParser.TupleExpressionContext) {
+                            break;
+                        }
+                        temp = (RuleContext) temp.getChild(0);
+                    }
+                    if (temp instanceof CSharpParser.TupleExpressionContext) {
+                        String pattern = getPattern((CSharpParser.TupleExpressionContext) temp, ctx.getText().startsWith("newRegex") ? 0 : 1);
+                        int index = 2;
+                        if (ctx.getText().startsWith("newRegex")) {
+                            index = 1;
+                        } else if (ctx.getText().startsWith("Regex.Replace")) {
+                            index = 3;
+                        }
+                        String flags = getFlags((CSharpParser.TupleExpressionContext) temp, index);
+                        regexps re = new regexps(line, flags, pattern, funcName);
+                        regexpsArrayList.add(re);
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    private String getFuncName(String text) {
+        String funcName = "";
+        if (text.startsWith("Regex.Match")) {
+            funcName = "Regex.Match";
+        } else if (text.startsWith("Regex.IsMatch")) {
+            funcName = "Regex.IsMatch";
+        } else if (text.startsWith("Regex.Matches")) {
+            funcName = "Regex.Matches";
+        } else if (text.startsWith("Regex.Replace")) {
+            funcName = "Regex.Replace";
+        } else if (text.startsWith("newRegex")) {
+            funcName = "newRegex";
+        } else if (text.startsWith("Regex.Split")) {
+            funcName = "Regex.Split";
+        }
+        return funcName;
+    }
+
+    private String getFlags(CSharpParser.TupleExpressionContext tupleExpressionContext, int index) {
+        try {
+            if (tupleExpressionContext.argument().size() > index) {
+                RuleContext item = tupleExpressionContext.argument(index);
+                while (item.getChildCount() == 1) {
+                    if (item.getChild(0) instanceof TerminalNode) {
+                        break;
+                    }
+                    item = (RuleContext) item.getChild(0);
+                }
+                if (item instanceof CSharpParser.IdentifierContext) {
+                    return hashMapFlag.getOrDefault(item.getText(), "");
+                } else {
+                    return item.getText().replace(" ", "");
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return "";
+    }
+
+    private String getPattern(CSharpParser.TupleExpressionContext tupleExpressionContext, int index) {
+        try {
+            if (tupleExpressionContext.argument().size() > index) {
+                RuleContext item = tupleExpressionContext.argument(index);
+                while (item.getChildCount() == 1) {
+                    if (item.getChild(0) instanceof TerminalNode) {
+                        break;
+                    }
+                    item = (RuleContext) item.getChild(0);
+                }
+                if (item instanceof CSharpParser.String_literalContext) {
+                    if (item.getText().startsWith("@")) {
+                        return item.getText().substring(2, item.getText().length() - 1);
+                    } else {
+                        return item.getText().substring(1, item.getText().length() - 1);
+                    }
+                } else if (item instanceof CSharpParser.IdentifierContext) {
+                    return hashMapPattern.getOrDefault(item.getText(), "");
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return "";
     }
 
     /**
@@ -373,82 +506,6 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      */
     @Override
     public void exitArgument_list(CSharpParser.Argument_listContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterArgument(CSharpParser.ArgumentContext ctx) {
-        if (ctx.getText().startsWith("Regex.Match") || ctx.getText().startsWith("Regex.IsMatch") || ctx.getText().startsWith("Regex.Matches") || ctx.getText().startsWith("newRegex")) {
-            RuleContext context = ctx.expression();
-            while (context.getChildCount() == 1) {
-                context = (RuleContext) context.getChild(0);
-            }
-            if (context instanceof CSharpParser.TupleExpressionContext) {
-                CSharpParser.TupleExpressionContext tupleExpressionContext = (CSharpParser.TupleExpressionContext) context;
-                String pattern = getPattern(tupleExpressionContext, ctx.getText().startsWith("newRegex") ? 0 : 1);
-                System.out.println(pattern);
-                String flags = getFlags(tupleExpressionContext, ctx.getText().startsWith("newRegex") ? 1 : 2);
-                System.out.println(flags);
-            } else if (context instanceof CSharpParser.Conditional_expressionContext) {
-                RuleContext temp = ((CSharpParser.Conditional_expressionContext) context).null_coalescing_expression();
-                while (temp.getChildCount() == 1) {
-                    if (temp instanceof CSharpParser.TupleExpressionContext) {
-                        break;
-                    }
-                    temp = (RuleContext) temp.getChild(0);
-                }
-                if (temp instanceof CSharpParser.TupleExpressionContext) {
-                    String pattern = getPattern((CSharpParser.TupleExpressionContext) temp, ctx.getText().startsWith("newRegex") ? 0 : 1);
-                    System.out.println(pattern);
-                    String flags = getFlags((CSharpParser.TupleExpressionContext) temp, ctx.getText().startsWith("newRegex") ? 1 : 2);
-                    System.out.println(flags);
-                }
-            }
-        }
-    }
-
-    private String getFlags(CSharpParser.TupleExpressionContext tupleExpressionContext, int index) {
-        if (tupleExpressionContext.argument().size() > index) {
-            RuleContext item = tupleExpressionContext.argument(index);
-            while (item.getChildCount() == 1) {
-                if (item.getChild(0) instanceof TerminalNode) {
-                    break;
-                }
-                item = (RuleContext) item.getChild(0);
-            }
-            if (item instanceof CSharpParser.IdentifierContext) {
-                return hashMapFlag.getOrDefault(item.getText(), "");
-            } else {
-                return item.getText().replace(" ", "");
-            }
-        }
-        return "";
-    }
-
-    private String getPattern(CSharpParser.TupleExpressionContext tupleExpressionContext, int index) {
-        if (tupleExpressionContext.argument().size() > index) {
-            RuleContext item = tupleExpressionContext.argument(index);
-            while (item.getChildCount() == 1) {
-                if (item.getChild(0) instanceof TerminalNode) {
-                    break;
-                }
-                item = (RuleContext) item.getChild(0);
-            }
-            if (item instanceof CSharpParser.String_literalContext) {
-                if (item.getText().startsWith("@")) {
-                    return item.getText().substring(2, item.getText().length() - 1);
-                } else {
-                    return item.getText().substring(1, item.getText().length() - 1);
-                }
-            } else if (item instanceof CSharpParser.IdentifierContext) {
-                return hashMapPattern.getOrDefault(item.getText(), "");
-            }
-        }
-        return "";
     }
 
     /**
@@ -1572,7 +1629,8 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterExplicit_anonymous_function_parameter_list(CSharpParser.Explicit_anonymous_function_parameter_listContext ctx) {
+    public void enterExplicit_anonymous_function_parameter_list
+    (CSharpParser.Explicit_anonymous_function_parameter_listContext ctx) {
     }
 
     /**
@@ -1581,7 +1639,8 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitExplicit_anonymous_function_parameter_list(CSharpParser.Explicit_anonymous_function_parameter_listContext ctx) {
+    public void exitExplicit_anonymous_function_parameter_list
+    (CSharpParser.Explicit_anonymous_function_parameter_listContext ctx) {
     }
 
     /**
@@ -1590,7 +1649,8 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterExplicit_anonymous_function_parameter(CSharpParser.Explicit_anonymous_function_parameterContext ctx) {
+    public void enterExplicit_anonymous_function_parameter
+    (CSharpParser.Explicit_anonymous_function_parameterContext ctx) {
     }
 
     /**
@@ -1599,7 +1659,8 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitExplicit_anonymous_function_parameter(CSharpParser.Explicit_anonymous_function_parameterContext ctx) {
+    public void exitExplicit_anonymous_function_parameter(CSharpParser.Explicit_anonymous_function_parameterContext
+                                                                  ctx) {
     }
 
     /**
@@ -1608,7 +1669,8 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterImplicit_anonymous_function_parameter_list(CSharpParser.Implicit_anonymous_function_parameter_listContext ctx) {
+    public void enterImplicit_anonymous_function_parameter_list
+    (CSharpParser.Implicit_anonymous_function_parameter_listContext ctx) {
     }
 
     /**
@@ -1617,7 +1679,8 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitImplicit_anonymous_function_parameter_list(CSharpParser.Implicit_anonymous_function_parameter_listContext ctx) {
+    public void exitImplicit_anonymous_function_parameter_list
+    (CSharpParser.Implicit_anonymous_function_parameter_listContext ctx) {
     }
 
     /**

@@ -129,6 +129,47 @@ public class Example
         Stopwatch sw = null;
       }
 
+      public static void WordScrambler()
+         {
+            string words = "letter alphabetical missing lack release " +
+                           "penchant slack acryllic laundry cease";
+            string pattern = @"\w+  # Matches all the characters in a word.";
+            MatchEvaluator evaluator = new MatchEvaluator(WordScrambler);
+            Console.WriteLine("Original words:");
+            Console.WriteLine(words);
+            Console.WriteLine();
+            try {
+               Console.WriteLine("Scrambled words:");
+               Console.WriteLine(Regex.Replace(words, pattern, evaluator,
+                                               RegexOptions.IgnorePatternWhitespace,
+                                               TimeSpan.FromSeconds(.25)));
+            }
+            catch (RegexMatchTimeoutException) {
+               Console.WriteLine("Word Scramble operation timed out.");
+               Console.WriteLine("Returned words:");
+            }
+         }
+
+         public static void splt()
+            {
+               string input = @"07/14/2007";
+               string pattern = @"(-)|(/)";
+
+               foreach (string result in Regex.Split(input, pattern))
+               {
+                  Console.WriteLine("'{0}'", result);
+               }
+
+                 string input = "plum-pear";
+                     string pattern = "(-)";
+
+                     string[] substrings = Regex.Split(input, pattern,RegexOptions.IgnoreCase));    // Split on hyphens
+                     foreach (string match in substrings)
+                     {
+                        Console.WriteLine("'{0}'", match);
+                     }
+            }
+
 
 
 }
