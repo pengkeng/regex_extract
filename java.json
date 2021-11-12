@@ -1,0 +1,31 @@
+[
+  {
+    "filename": "C:\\Users\\pengqc\\IdeaProjects\\regex_extract\\src\\main\\java\\javal\\example\\test.java",
+    "regexps": [
+      {
+        "pattern": "123",
+        "flags": "",
+        "funcName": "replaceAll",
+        "line": 19
+      },
+      {
+        "pattern": ".*runoob.*",
+        "flags": "",
+        "funcName": "matches",
+        "line": 20
+      },
+      {
+        "pattern": "ewq",
+        "flags": "Pattern.MULTILINE|Pattern.CASE_INSENSITIVE",
+        "funcName": "compile",
+        "line": 21
+      },
+      {
+        "pattern": "([\\s\\S]+123)",
+        "flags": "",
+        "funcName": "compile",
+        "line": 26
+      }
+    ]
+  }
+]

@@ -1,9 +1,9 @@
 <?php
+$subject = array('1', 'a', '2', 'b', '3', 'A', 'B', '4');
 $string = 'google 123, 456';
 $pattern2 = '/(\w+) (\d+), (\d+)/i';
 $replacement = 'runoob ${2},$3';
 
-$subject = array('1', 'a', '2', 'b', '3', 'A', 'B', '4');
 $pattern = array('/\d/', '/[a-z]/', '/[1a]/');
 $replace = array('A:$0', 'B:$0', 'C:$0');
 $replace1 = $string + $pattern2 +"\w";
@@ -11,6 +11,15 @@ $replace2 = "abc"+ "\w[a-z]"+"aa";
 $replace5 = "abc"+ "\w[a-z]" - "aa";
 $replace3 = $replace2+ "\w[a-z]";
 $replace4 = $pattern2;
+
+
+	if ( preg_match( '#^' . $current_table_prefix . '#', $table ) && ! preg_match( '#^' . $current_table_prefix . '[0-9]+_#', $table ) ) {
+									if ( ! in_array( str_replace( $current_table_prefix, '', $table ), $skip_table_search_replace ) ) {
+										$tables_to_update[] = $table;
+									}
+								}
+
+$url = preg_replace(['/(\W)\?$/', '/(\W)\?/'], ['', '\1'], $url);
 
 echo "preg_filter 返回值：\n";
 print_r(preg_filter('/a-z\w2/', $replace, $subject));
@@ -33,6 +42,7 @@ echo preg_replace($replace2, $replacement, $string);
 echo preg_replace($replace3 + $replace4, $replacement, $string);
 }
 
+
 $fl_array = preg_grep("/^(\d+)?\.\d+$/i", $array);
 print_r($fl_array);
 
@@ -40,7 +50,7 @@ $userinfo = "Name: <b>PHP</b> <br> Title: <b>Programming Language</b>";
 preg_match_all ("/<b>(.*)<\/b>/U", $userinfo, $pat_array);
 print_r($pat_array[0]);
 
-if (preg_match("/php/i", "PHP is the web scripting language of choice.")) {
+if (preg_match("/php/i",  $userinfo)) {
     echo "查找到匹配的字符串 php。";
 } else {
     echo "未发现匹配的字符串 php。";

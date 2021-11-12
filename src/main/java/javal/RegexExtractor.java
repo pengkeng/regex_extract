@@ -1,5 +1,6 @@
 package javal;
 
+import org.apache.commons.io.FileUtils;
 import utils.bean.FileObj;
 import utils.bean.regexps;
 import com.github.javaparser.StaticJavaParser;
@@ -18,6 +19,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * @author pqc
@@ -60,7 +63,7 @@ public class RegexExtractor {
             String fileName = dir.toString();
             if (fileName.endsWith(".java")) {
                 try {
-                    System.out.println("111->>>>" + fileName);
+                    Logger.getGlobal().info(Thread.currentThread().getId() + " ： 111->>>>" + fileName);
                     LinkedList<regexps> regexs = getReFromFile(fileName);
                     if (regexs != null && regexs.size() > 0) {
                         resultList.add(new FileObj(regexs, fileName));
@@ -77,7 +80,7 @@ public class RegexExtractor {
                         String fileName = file.toString();
                         if (fileName.endsWith(".java")) {
                             try {
-                                System.out.println("111->>>>" + fileName);
+                                Logger.getGlobal().info(Thread.currentThread().getId() + " ： 111->>>>" + fileName);
                                 LinkedList<regexps> regexs = getReFromFile(fileName);
                                 if (regexs != null && regexs.size() > 0) {
                                     resultList.add(new FileObj(regexs, fileName));
@@ -87,9 +90,9 @@ public class RegexExtractor {
                             }
                         }
                     } else if (file.isDirectory()) {
-                        if (file.toString().contains("test")) {
-                            return;
-                        }
+//                        if (file.toString().contains("test")) {
+//                            return;
+//                        }
                         listFile(file, resultList);
                     }
                 }
@@ -131,11 +134,15 @@ public class RegexExtractor {
                 Optional<Expression> init = ((VariableDeclarator) compilationUnit).getInitializer();
                 if (init.isPresent() && init.get().isStringLiteralExpr()) {
                     String value = ((StringLiteralExpr) init.get()).asString();
-                    list.put(key, value);
+                    if (value != null) {
+                        list.put(key, value);
+                    }
                 }
                 if (init.isPresent() && init.get().isNameExpr()) {
-                    String value = list.get(init.get().toString());
-                    list.put(key, value);
+                    String value = list.getOrDefault(init.get().toString(), "Dynamic-Pattern " + init.toString());
+                    if (value != null) {
+                        list.put(key, value);
+                    }
                 }
 
             }
@@ -145,27 +152,34 @@ public class RegexExtractor {
             Expression valueObj = ((AssignExpr) compilationUnit).getValue();
             if (valueObj.isStringLiteralExpr()) {
                 String value = valueObj.toString();
-                list.put(key, value);
+                if (value != null) {
+                    list.put(key, value);
+                }
             }
             if (valueObj.isNameExpr()) {
                 String value = list.get(valueObj.toString());
-                list.put(key, value);
+                if (value != null) {
+                    list.put(key, value);
+                }
             }
         }
         if (compilationUnit instanceof MethodCallExpr) {
             String name = ((MethodCallExpr) compilationUnit).getName().toString();
             switch (name) {
                 case "matches":
-                    regexProcess(compilationUnit, list, regexs,name);
+                    regexProcess(compilationUnit, list, regexs, name);
                     break;
                 case "compile":
-                    regexProcess(compilationUnit, list, regexs,name);
+                    regexProcess(compilationUnit, list, regexs, name);
                     break;
                 case "replaceAll":
-                    regexProcess(compilationUnit, list, regexs,name);
+                    regexProcess(compilationUnit, list, regexs, name);
                     break;
-                case "replace":
-                    regexProcess(compilationUnit, list, regexs,name);
+//                case "replace":
+//                    regexProcess(compilationUnit, list, regexs, name);
+//                    break;
+                case "replaceFirst":
+                    regexProcess(compilationUnit, list, regexs, name);
                     break;
                 default:
                     break;
@@ -178,7 +192,8 @@ public class RegexExtractor {
 
     /**
      * 从当前AST节点提取re
-     *  @param compilationUnit
+     *
+     * @param compilationUnit
      * @param list
      * @param regexs
      * @param name
@@ -187,27 +202,38 @@ public class RegexExtractor {
         NodeList<Expression> arguments = ((MethodCallExpr) compilationUnit).getArguments();
         if (arguments.size() > 0) {
             Expression argument = arguments.get(0);
-            String regex = null;
+            String regex = "";
             if (argument.isBinaryExpr()) {
                 regex = getCombineRegex(argument, list);
             } else if (argument.isNameExpr()) {
-                regex = list.get(argument.toString());
+                regex = list.getOrDefault(argument.toString(), "Dynamic-Pattern " + argument.toString());
             } else if (argument.isStringLiteralExpr()) {
                 regex = ((StringLiteralExpr) argument).asString();
+            } else if (argument.isCharLiteralExpr()) {
+                regex = ((CharLiteralExpr) argument).getValue();
+            } else {
+                regex = "Dynamic-Pattern " + argument.toString();
             }
-            if (regex != null && !regex.isEmpty() && regex.length() > 5) {
-                int line = -1;
+            String flags = "";
+            if (name.equals("compile") && arguments.size() == 2) {
+                flags = arguments.get(1).toString().replace(" ", "").trim();
+            }
+            int line = -1;
+            try {
                 if (argument.getRange().isPresent()) {
                     line = argument.getRange().get().begin.line;
                 }
-                System.out.println(regex);
-                regexs.add(new regexps(line, regex,name));
+            } catch (Exception ignored) {
             }
+            regexps r = new regexps(line, regex, name);
+            r.setFlags(flags);
+            regexs.add(r);
         }
     }
 
     /**
      * 获取组合regex的内容
+     *
      * @param binaryExpr
      * @param list
      * @return
@@ -219,14 +245,14 @@ public class RegexExtractor {
             if (BinaryExpr.Operator.PLUS == binaryExpr.asBinaryExpr().getOperator()) {
                 return left + right;
             } else {
-                return "";
+                return "Dynamic-Pattern " + binaryExpr.toString();
             }
         } else if (binaryExpr.isStringLiteralExpr()) {
             return binaryExpr.asStringLiteralExpr().asString();
         } else if (binaryExpr.isNameExpr()) {
-            return list.get(binaryExpr.toString());
+            return list.getOrDefault(binaryExpr.toString(), "Dynamic-Pattern " + binaryExpr.toString());
         } else {
-            return "";
+            return "Dynamic-Pattern " + binaryExpr.toString();
         }
     }
 }

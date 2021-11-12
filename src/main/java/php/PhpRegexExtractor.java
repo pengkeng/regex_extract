@@ -82,9 +82,9 @@ public class PhpRegexExtractor {
                             }
                         }
                     } else if (file.isDirectory()) {
-                        if (file.toString().contains("test")) {
-                            continue;
-                        }
+//                        if (file.toString().contains("test")) {
+//                            continue;
+//                        }
                         listFile(file, resultList);
                     }
                 }

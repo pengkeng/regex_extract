@@ -102,12 +102,12 @@ public class CSharpParserBaseListener implements CSharpParserListener {
                         return item.getText().substring(1, item.getText().length() - 1);
                     }
                 } else if (item instanceof CSharpParser.IdentifierContext) {
-                    return hashMapPattern.getOrDefault(item.getText(), "");
+                    return hashMapPattern.getOrDefault(item.getText(), "Dynamic-Pattern " + item.getText());
                 }
             }
         } catch (Exception ignored) {
         }
-        return "";
+        return "Dynamic-Pattern " + argument_listContext.getText();
     }
 
     private void extractedString(RuleContext context, String text) {
@@ -266,12 +266,26 @@ public class CSharpParserBaseListener implements CSharpParserListener {
                         return item.getText().substring(1, item.getText().length() - 1);
                     }
                 } else if (item instanceof CSharpParser.IdentifierContext) {
-                    return hashMapPattern.getOrDefault(item.getText(), "");
+                    return hashMapPattern.getOrDefault(item.getText(), "Dynamic-Pattern " + item.getText());
                 }
             }
         } catch (Exception ignored) {
         }
-        return "";
+        return "Dynamic-Pattern " + tupleExpressionContext.getText();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterConstant_declarator(CSharpParser.Constant_declaratorContext ctx) {
+        try {
+            String text = ctx.identifier().getText();
+            extractedString(ctx.expression(), text);
+        } catch (Exception ignored) {
+        }
     }
 
     /**
@@ -3327,15 +3341,6 @@ public class CSharpParserBaseListener implements CSharpParserListener {
      */
     @Override
     public void exitConstant_declarators(CSharpParser.Constant_declaratorsContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterConstant_declarator(CSharpParser.Constant_declaratorContext ctx) {
     }
 
     /**

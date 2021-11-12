@@ -2874,11 +2874,29 @@ public class PhpParserBaseListener implements PhpParserListener {
                 list = getValueFromExpression(context);
             } else if (context instanceof ArithmeticExpressionContext) {
                 list = getValueFromExpression(context);
+            } else if (context instanceof ArrayCreationExpressionContext) {
+                list = getValueFromArrayCreationExpressionContext((ArrayCreationExpressionContext) context);
+            } else {
+                regexs.add(new regexps(line, "Dynamic-Pattern " + context.getText(), functionName));
+                return;
+            }
+            if (list.isEmpty()) {
+                regexs.add(new regexps(line, "Dynamic-Pattern " + context.getText(), functionName));
+                return;
             }
             for (String str : list) {
                 regexs.add(new regexps(line, str, functionName));
             }
         }
+    }
+
+    private ArrayList<String> getValueFromArrayCreationExpressionContext(ArrayCreationExpressionContext context) {
+        List<ArrayItemContext> arrayItemContextList = context.arrayCreation().arrayItemList().arrayItem();
+        ArrayList<String> list = new ArrayList<>();
+        for (ArrayItemContext arrayItemContext : arrayItemContextList) {
+            list.add(arrayItemContext.getText());
+        }
+        return list;
     }
 
     public void visitAssignmentExpressionContext(AssignmentExpressionContext context) {
@@ -2921,7 +2939,9 @@ public class PhpParserBaseListener implements PhpParserListener {
             } else {
                 //变量赋值
                 String value = getChainExpressionContextText(chainExpressionContext);
-                return hashMap.get(value);
+                ArrayList<String> list = new ArrayList<>();
+                list.add("Dynamic-Pattern " + valueCtx.getText());
+                return hashMap.getOrDefault(value, list);
             }
 
         } else if (valueCtx instanceof ArithmeticExpressionContext) {
@@ -2951,7 +2971,7 @@ public class PhpParserBaseListener implements PhpParserListener {
             }
             return value;
         }
-        return null;
+        return "Dynamic-Pattern " + arithmeticExpressionContext.getText();
 
     }
 
@@ -2961,6 +2981,6 @@ public class PhpParserBaseListener implements PhpParserListener {
             KeyedVariableContext keyedVariableContext = context.keyedVariable(0);
             return keyedVariableContext.VarName().getText();
         }
-        return null;
+        return "Dynamic-Pattern " + chainExpressionContext.getText();
     }
 }

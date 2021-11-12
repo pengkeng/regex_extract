@@ -249,6 +249,7 @@ class ASTWalkerForRegexps(ast.NodeVisitor):
                 # log(ast.dump(node))
 
                 # Get pattern
+                pattern = "Dynamic-Pattern " + str(node.func)
                 if type(node.args[0]) is ast.Str:
                     # log('Pattern is static')
                     pattern = node.args[0].s
@@ -257,8 +258,10 @@ class ASTWalkerForRegexps(ast.NodeVisitor):
                     name = node.args[0].id
                     if name in self.strMap.keys():
                         pattern = self.strMap[name]
+                    else:
+                        pattern = "Dynamic-Pattern " + name
 
-                # Get flags
+                        # Get flags
                 funcCanHaveFlags = False
                 dynamicFlags = False
                 flagNames = []
@@ -295,7 +298,7 @@ class ASTWalkerForRegexps(ast.NodeVisitor):
 
                 if funcCanHaveFlags:
                     if dynamicFlags:
-                        flagsString = 'DYNAMIC-FLAGS'
+                        flagsString = 'Dynamic-Flags'
                     else:
                         flagsString = '|'.join(flagNames)
                 else:
@@ -364,7 +367,18 @@ def getRe(sourcefile):
 
 
 if __name__ == '__main__':
-    project = "test.json"
-    root = "test"
+    # path = "D:/pqc/pypi/pro_file"
+    # files = os.listdir(path)
+    # index = 0
+    # for file in files:
+    #     print(file)
+    #     root = path + "/" + file
+    #     project = "D:/pqc/pypi/new_result/" + file + ".json"
+    #     re_list = list()
+    #     re_list.clear()
+    #     main(root, project)
+    root = r"C:\Users\pengqc\IdeaProjects\regex_extract\src\main\python\test"
+    project = "a.json"
     re_list = list()
+    re_list.clear()
     main(root, project)

@@ -21,16 +21,16 @@ public class MultiThreadUtils<T, V> {
 
 
     // 线程个数，如不赋值，默认为5
-    private int threadCount = 5;
+    private static int threadCount = 5;
     // 具体业务任务
     private ITask<T, V> task;
 
     /**
      * 初始化线程池和线程个数<BR>
      */
-    public static MultiThreadUtils newInstance(int threadCount, int time) {
+    public static MultiThreadUtils newInstance(int Count) {
         MultiThreadUtils instance = new MultiThreadUtils();
-        threadCount = threadCount;
+        threadCount = Count;
         return instance;
     }
 

@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class CSharpRegexExtractor {
@@ -38,12 +39,10 @@ public class CSharpRegexExtractor {
     public void extractToFile() {
         LinkedList<FileObj> resultList = new LinkedList<>();
         listFile(rootPath, resultList);
-        if (!resultList.isEmpty()) {
-            try {
-                IOUtils.saveData(resultList, resultFile);
-            } catch (IOException e) {
-                System.out.println(e.toString());
-            }
+        try {
+            IOUtils.saveData(resultList, resultFile);
+        } catch (IOException e) {
+            System.out.println(e.toString());
         }
     }
 
@@ -85,9 +84,9 @@ public class CSharpRegexExtractor {
                             }
                         }
                     } else if (file.isDirectory()) {
-                        if (file.toString().contains("test")) {
-                            continue;
-                        }
+//                        if (file.toString().contains("test") || file.toString().contains("Test")) {
+//                            continue;
+//                        }
                         listFile(file, resultList);
                     }
                 }
@@ -105,6 +104,16 @@ public class CSharpRegexExtractor {
     private LinkedList<regexps> getReFromFile(String filePath) throws FileNotFoundException {
         try {
 
+            List<String> lines = FileUtils.readLines(new File(filePath), "utf-8");
+            int i = 0;
+            for (i = 0; i < lines.size(); i++) {
+                if (lines.get(i).contains("using") && lines.get(i).contains("System.Text.RegularExpressions")) {
+                    break;
+                }
+            }
+            if (i >= lines.size()) {
+                return null;
+            }
             CSharpLexer cSharpLexer = new CSharpLexer(CharStreams.fromFileName(filePath));
             CommonTokenStream tokenStream = new CommonTokenStream(cSharpLexer);
             CSharpParser cSharpParser = new CSharpParser(tokenStream);

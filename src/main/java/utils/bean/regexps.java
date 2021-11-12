@@ -25,7 +25,6 @@ public class regexps {
     }
 
     public regexps(int line, String flags, String pattern, String funcName) {
-
         this.pattern = pattern;
         String[] strs = flags.split("\\|");
         StringBuilder fs = new StringBuilder();
